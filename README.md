@@ -11,8 +11,6 @@ TBD
 Stack Overflow is a website known as the question and answer platform for people to ask any technical question they have and receive answers from other software developers. Users have the ability to vote on questions which they consider best to help others find the most optimal solution. To discern users from one another, they must have login credentials to post or answer questions. Furthermore, some additional features can be included to enhance user experience such as tags and more
 
 ## Core Features
-
-## Core Features
 Core Feature 1: Asking and answering questions 
 
 ## Team Members 

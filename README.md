@@ -8,8 +8,7 @@ TBD
 
 
 ## Project Description
-Stackoverflow is a social website which is also known as the question and answer platform that enables the software developer professionals can answer the question for the queries of the user, users can find the best answer for the technical question, users has the ability to vote the answers which they consider it as the best one. In addition to this, as users search for the best answer for the question, can compare the related answers and can accept the best suitable answer the suits for the question. Furthermore, some additional features can also be included to provide some added advantage to the users such as tags and more.
-
+Stack Overflow is a website known as the question and answer platform for people to ask any technical question they have and receive answers from other software developers. Users have the ability to vote on questions which they consider best to help others find the most optimal solution. To discern users from one another, they must have login credentials to post or answer questions. Furthermore, some additional features can be included to enhance user experience such as tags and more
 
 ## Core Features
 

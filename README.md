@@ -15,6 +15,14 @@ Stack Overflow is a website known as the question and answer platform for people
 Core Feature 1: Asking and answering questions <br/>
 Core Feature 2: Voting on the answers
 
+## Additional features
+Able to search answer by filering the user
+Using tag name as filter that categorizes our questions with other similar questions.
+
+## Future Features
+Display the number of votes on the answers.
+Creating and accessing personal account.
+
 ## Team Members 
 * Elyes Bahri ([Github/Elyes-Bahri](https://github.com/elyes-bahri))
 * Kevin Emmanuel ([Github/Kenn55](https://github.com/kenn55))

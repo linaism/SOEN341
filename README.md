@@ -12,8 +12,6 @@ Stack Overflow is a website known as the question and answer platform for people
 
 ## Core Features
 Core Feature 1: Asking and answering questions 
-
-## Core Features
 Core Feature 2: Voting on the answers
 
 ## Team Members 

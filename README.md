@@ -16,11 +16,11 @@ Core Feature 1: Asking and answering questions <br/>
 Core Feature 2: Voting on the answers
 
 ## Additional features
-Able to search answer by filering the user
+Able to search answer by filering the user <br/>
 Using tag name as filter that categorizes our questions with other similar questions.
 
 ## Future Features
-Display the number of votes on the answers.
+Display the number of votes on the answers. <br/>
 Creating and accessing personal account.
 
 ## Team Members 

@@ -5,7 +5,13 @@ SOEN 341 Fall 2021 challenges students to develop a simplified version of the ap
 
 
 ## Programming Languages and Techniques 
-TBD
+* Javascript 
+* HTML
+* CSS
+* Angular 
+* MongoDB 
+* Express.Js
+* Node.Js
 
 
 ## Project Description

@@ -1,7 +1,8 @@
-# SOEN341
-Implementation of a simplified Stack Overflow app. 
+# SOEN341 Project
 
 ## Objective
+SOEN 341 Fall 2021 challenges students to develop a simplified version of the application Stack Overflow with creative freedom regarding development and deployment.
+
 
 ## Programming Languages and Techniques 
 TBD

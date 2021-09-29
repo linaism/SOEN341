@@ -17,7 +17,7 @@ Core Feature 2: Voting on the answers <br/>
 Core Feature 3: Accepting the best answer
 
 ## Additional features
-Able to search answer by filering the user <br/>
+Able to search answer by filtering the user <br/>
 Using tag name as filter that categorizes our questions with other similar questions.
 
 ## Future Features

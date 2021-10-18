@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { NavigationBar, Header, Home, Question } from "./Components";
+import { NavigationBar, Header, HomePage, QuestionPage } from "./Components";
 
 function App() {
   return (
@@ -8,8 +8,8 @@ function App() {
         <NavigationBar />
         <Header />
         <Switch>
-          <Route path="/" exact component={() => <Home />} />
-          <Route path="/question" exact component={() => <Question />} />
+          <Route path="/" exact component={() => <HomePage />} />
+          <Route path="/question" exact component={() => <QuestionPage />} />
         </Switch>
       </Router>
     </div>

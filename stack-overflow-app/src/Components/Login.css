@@ -1,0 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=Teko&display=swap');
+
+.NavigationBar {
+    text-align: center;
+    font-family: 'Teko';
+  }
+
+.HomePage {
+    text-align: center;
+    font-family: 'Teko';
+}

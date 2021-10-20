@@ -1,6 +1,6 @@
-import React from 'react';
-import {useState} from 'react';
-import VotingFeature from './VotingFeature';
+import React from 'react'
+import {useState} from 'react'
+import VotingFeature from './VotingFeature'
 
  const QuestionPage = () => {
      const[vote] = useState(null);
@@ -12,6 +12,7 @@ import VotingFeature from './VotingFeature';
      )
      // Include the VotingFeature line 2 times once in the question component
      // and the other one for in the answer component
- }
+}
 
- export default QuestionPage;
+export default QuestionPage
+

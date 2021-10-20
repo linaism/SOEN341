@@ -9,7 +9,7 @@ SOEN 341 Fall 2021 challenges students to develop a simplified version of the ap
 * HTML
 * CSS
 * React 
-* MongoDB 
+* MySQL 
 * Express.Js
 * Node.Js
 

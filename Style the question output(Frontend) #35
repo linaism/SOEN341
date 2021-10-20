@@ -1,0 +1,32 @@
+import React from "react";
+import { MDBContainer, MDBRow, MDBCol, MDBBtn, MDBIcon } from 'mdbreact';
+
+const QuestionPage = () => {
+return (
+<MDBContainer>
+  <MDBRow>
+    <MDBCol md="6">
+      <form>
+        <p className="h4 text-center mb-4">YOUR QUESTIONS</p>
+        <br />
+        <br />
+        <label htmlFor="defaultQuestion" className="grey-text">
+          Your Question
+        </label>
+        <br />
+        <textarea type="text" id="defaultQuestion" className="your-question" rows="10" />
+          
+        <div className="text-center mt-4">
+                  
+                    
+                  </MDBBtn>
+                </div>
+              </form>
+            </MDBCol>
+          </MDBRow>
+        </MDBContainer>
+      );
+    };
+    
+
+    export default QuestionPage;

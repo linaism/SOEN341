@@ -7,13 +7,21 @@ class QuestionPage extends React.Component {
 
   state = {
     question: '',
+    answer: '',
     currentQuestion: '',
+    currentAnswer: '',
     showQuestion: false,
+    showAnswer: false,
   }
 
   onLineChange = (e) => {
     const currentQuestion = e.target.value;
     this.setState(() => ({ currentQuestion }))
+  }
+
+  onAnswerChange = (e) => {
+    const currentAnswer = e.target.value;
+    this.setState(() => ({ currentAnswer }))
   }
 
   onSubmitQuestion = (e) => {
@@ -24,13 +32,21 @@ class QuestionPage extends React.Component {
     this.setState(() => ({ showQuestion: true }))
   }
 
+  onSubmitAnswer = (e) => {
+    e.preventDefault();
+    let answer = this.state.currentAnswer;
+    this.setState(() => ({ currentAnswer: '' }))
+    this.setState(() => ({ answer }))
+    this.setState(() => ({ showAnswer: true }))
+  }
+
   render() {
     //Styling to modify
     const title = {
-      fontSize: 50,
-      color: "#4a54f1",
-      textAlign: "center",
+      fontSize: 30,
+      textAlign: "left",
       paddingTop: "100px",
+      paddingLeft: "50px",
       fontFamily: "Ubuntu",
     }
 
@@ -54,7 +70,8 @@ class QuestionPage extends React.Component {
       backgroundColor: "#3E86C2",
       borderRadius: 5,
       borderColor: "#3E86C2",
-      width: '270px'
+      width: '270px', 
+      marginBottom: 50
     }
 
     const inputStyle1 = {
@@ -69,12 +86,51 @@ class QuestionPage extends React.Component {
       width: '80%'
     }
 
+    const submitted = {
+        padding: "35px", 
+        backgroundColor: "#EBEBEB",
+        borderColor: "B0B0B0",
+        border: "solid 1px",
+        borderRadius: 5, 
+        margin: 20
+    }
+
+    const titleAnswer = {
+        fontSize: 30, 
+        fontFamily: "Ubuntu", 
+        textAlign: "left", 
+        paddingLeft: "50px"
+    }
+
     return (
       <div className="container">
-
-        {this.state.showQuestion && <h4 className="question" display="flex">{this.state.question}</h4>}
+          <h3 style={title}> Question </h3>
+        {this.state.showQuestion && 
+        <div>
+            <h4 className="question" display="flex" style={submitted}>{this.state.question} </h4>
+            {this.state.showAnswer && 
+            <div>
+                <h3 style={titleAnswer}> Answer </h3>
+                <h4 style={submitted} className="answer" display="flex">{this.state.answer}</h4>
+            </div>
+            }
+            <form onSubmit={this.onSubmitAnswer}>
+              <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
+              <input
+                type="text"
+                placeholder="Enter answer"
+                value={this.state.currentAnswer}
+                onChange={this.onAnswerChange}
+                style={inputStyle1}
+              />
+              </div>
+              <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
+              <button  style={buttonStyle1}>Submit Answer</button>
+              </div>
+            </form>
+          </div>
+        }
           <div >
-            <h2 style={subtitle}>Question</h2>
             <form onSubmit={this.onSubmitQuestion}>
               <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
               <input

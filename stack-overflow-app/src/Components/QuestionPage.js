@@ -10,9 +10,19 @@ class QuestionPage extends React.Component {
     answer: '',
     currentQuestion: '',
     currentAnswer: '',
+    currentContent:'',
     showQuestion: false,
     showAnswer: false,
+    showContent:false
+
   }
+
+onContentChange =(e) => 
+{
+const currentContent = e.target.value;
+this.setState(() => ({ currentContent}))
+
+}
 
   onLineChange = (e) => {
     const currentQuestion = e.target.value;
@@ -30,6 +40,11 @@ class QuestionPage extends React.Component {
     this.setState(() => ({ currentQuestion: '' }))
     this.setState(() => ({ question }))
     this.setState(() => ({ showQuestion: true }))
+    let Content = this.state.currentContent;
+    this.setState(() => ({ currentContent: '' }))
+    this.setState(() => ({ Content }))
+    this.setState(() => ({ showContent: true }))
+
   }
 
   onSubmitAnswer = (e) => {
@@ -42,11 +57,20 @@ class QuestionPage extends React.Component {
 
   render() {
     //Styling to modify
-    const title = {
+
+    const Askquestion ={
       fontSize: 30,
       textAlign: "left",
       paddingTop: "100px",
-      paddingLeft: "50px",
+      paddingLeft: "0px",
+      fontFamily: "Arial",
+
+    }
+    const title = {
+      fontSize: 30,
+      textAlign: "left",
+      paddingTop: "10px",
+      paddingLeft: "0px",
       fontFamily: "Ubuntu",
     }
 
@@ -77,13 +101,16 @@ class QuestionPage extends React.Component {
     const inputStyle1 = {
       fontSize: 20,
       color: "black",
-      padding: "10px",
-      backgroundColor: "white",
+      padding: "0px",
+      backgroundColor: "#F3EFEE",
       borderRadius: 5,
       borderColor: "#3E86C2",
       fontType: "Ubuntu",
-      margin: "0 10% 50px 10%",
-      width: '80%'
+      margin: "0 0 0 0",
+      width: '100%',
+      border:'0px',
+      outline:'0px'
+
     }
 
     const submitted = {
@@ -104,7 +131,12 @@ class QuestionPage extends React.Component {
 
     return (
       <div className="container">
+        <h2 style={Askquestion}> <b>Ask a question</b>  </h2> 
+        <b><hr/> </b>
+        <br/>
+        
           <h3 style={title}> Question </h3>
+          <p> Insert a title that displays your question </p>
         {this.state.showQuestion && 
         <div>
             <h4 className="question" display="flex" style={submitted}>{this.state.question} </h4>
@@ -130,21 +162,42 @@ class QuestionPage extends React.Component {
             </form>
           </div>
         }
+        
           <div >
             <form onSubmit={this.onSubmitQuestion}>
-              <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
+              <div style={{display: 'flex', alignSelf: 'left', textAlign: 'left', width: '70%'}}>
               <input
                 type="text"
-                placeholder="Enter question"
+                border='none'
+                outline='none'
+                placeholder="E.g How to connect MySQL database to react app"
                 value={this.state.currentQuestion}
                 onChange={this.onLineChange}
                 style={inputStyle1}
               />
               </div>
-              <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
+              <h3 style={title}> Content </h3>
+              <p> Write your question here, you can go into as much detail as you want </p>              
+            <div style={{display: 'flex', alignSelf: 'left', textAlign: 'left', width: '70%'}}>
+              <textarea
+                type="text"
+                rows='5'
+                border='0px'
+                outline='0px'
+                placeholder="Explain your question..."
+                value={this.state.currentContent}
+                onChange={this.onContentChange}
+                style={inputStyle1}
+              />
+              </div>
+              
+              <div style={{ display: 'flex', alignSelf: 'right', textAlign: 'right', position: 'absolute',
+    bottom: '0px'}}>
               <button  style={buttonStyle1}>Submit Question</button>
               </div>
             </form>
+
+          
           </div>
         
       </div>
@@ -152,5 +205,6 @@ class QuestionPage extends React.Component {
     
   }
 }
+
 
 export default QuestionPage

@@ -131,38 +131,20 @@ this.setState(() => ({ currentContent}))
 
     return (
       <div className="container">
-        <h2 style={Askquestion}> <b>Ask a question</b>  </h2> 
-        <b><hr/> </b>
-        <br/>
-        
-          <h3 style={title}> Question </h3>
-          <p> Insert a title that displays your question </p>
         {this.state.showQuestion && 
         <div>
-            <h4 className="question" display="flex" style={submitted}>{this.state.question} </h4>
-            {this.state.showAnswer && 
-            <div>
-                <h3 style={titleAnswer}> Answer </h3>
-                <h4 style={submitted} className="answer" display="flex">{this.state.answer}</h4>
-            </div>
-            }
-            <form onSubmit={this.onSubmitAnswer}>
-              <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
-              <input
-                type="text"
-                placeholder="Enter answer"
-                value={this.state.currentAnswer}
-                onChange={this.onAnswerChange}
-                style={inputStyle1}
-              />
-              </div>
-              <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
-              <button  style={buttonStyle1}>Submit Answer</button>
-              </div>
-            </form>
-          </div>
-        }
         
+<br/> <br/> <div> 
+<table style={{ marginLeft: "auto", marginRight: "auto",alignSelf: 'center', align: 'center'}}> <tr style={{VAlign: 'TOP'}}> <td style={{textAlign: 'right'}}> <b> Question: </b></td> <td>{this.state.question}</td> </tr> 
+<tr style={{VAlign: 'TOP'}}> <td style={{textAlign: 'right'}}> <b> Content: </b></td> <td>{this.state.Content}</td> </tr> </table> </div>
+   <br/><h3 style={{alignSelf: 'center', textAlign: 'center'}}> Thank you! Your question has been submitted successfully</h3></div>
+        }
+{!this.state.showQuestion && 
+       <div> <h2 style={Askquestion}> <b>Ask a question</b>  </h2> 
+        <b><hr/> </b>
+        <br/>
+          <h3 style={title}> Question </h3>
+          <p> Insert a title that displays your question </p>
           <div >
             <form onSubmit={this.onSubmitQuestion}>
               <div style={{display: 'flex', alignSelf: 'left', textAlign: 'left', width: '70%'}}>
@@ -199,7 +181,7 @@ this.setState(() => ({ currentContent}))
 
           
           </div>
-        
+        </div>}
       </div>
     )
     

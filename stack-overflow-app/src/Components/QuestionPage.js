@@ -7,12 +7,9 @@ class QuestionPage extends React.Component {
 
   state = {
     question: '',
-    answer: '',
     currentQuestion: '',
-    currentAnswer: '',
     currentContent:'',
     showQuestion: false,
-    showAnswer: false,
     showContent:false
 
   }
@@ -29,11 +26,7 @@ this.setState(() => ({ currentContent}))
     this.setState(() => ({ currentQuestion }))
   }
 
-  onAnswerChange = (e) => {
-    const currentAnswer = e.target.value;
-    this.setState(() => ({ currentAnswer }))
-  }
-
+  
   onSubmitQuestion = (e) => {
     e.preventDefault();
     let question = this.state.currentQuestion;
@@ -47,14 +40,7 @@ this.setState(() => ({ currentContent}))
 
   }
 
-  onSubmitAnswer = (e) => {
-    e.preventDefault();
-    let answer = this.state.currentAnswer;
-    this.setState(() => ({ currentAnswer: '' }))
-    this.setState(() => ({ answer }))
-    this.setState(() => ({ showAnswer: true }))
-  }
-
+  
   render() {
     //Styling to modify
 
@@ -74,14 +60,7 @@ this.setState(() => ({ currentContent}))
       fontFamily: "Ubuntu",
     }
 
-    const subtitle = {
-      fontSize: 20,
-      color: '#000000',
-      textAlign: "center",
-      paddingTop: "0px",
-      fontFamily: "Ubuntu",
-    }
-
+    
     const buttonStyle1 = {
       fontSize: 20,
       color: "white",
@@ -113,22 +92,7 @@ this.setState(() => ({ currentContent}))
 
     }
 
-    const submitted = {
-        padding: "35px", 
-        backgroundColor: "#EBEBEB",
-        borderColor: "B0B0B0",
-        border: "solid 1px",
-        borderRadius: 5, 
-        margin: 20
-    }
-
-    const titleAnswer = {
-        fontSize: 30, 
-        fontFamily: "Ubuntu", 
-        textAlign: "left", 
-        paddingLeft: "50px"
-    }
-
+    
     return (
       <div className="container">
         {this.state.showQuestion && 

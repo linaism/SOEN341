@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useHistory } from "react-router-dom";
 import Axios from 'axios';
+import {Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 
 const AskQuestionPage = () => {
 
@@ -15,7 +16,7 @@ const AskQuestionPage = () => {
 
 
   const routeChange = () =>{ 
-    let path = '/view-question'; 
+    let path = '/answer'; 
     history.push(path);
   }
 
@@ -131,7 +132,7 @@ const AskQuestionPage = () => {
               
               <div style={{ display: 'flex', alignSelf: 'right', textAlign: 'right', position: 'absolute',
     bottom: '0px'}}>
-              <button style={buttonStyle1}>Submit Question</button>
+           <button style={buttonStyle1}>Submit Question</button>
               </div>
             </form>
           </div>
@@ -142,7 +143,8 @@ const AskQuestionPage = () => {
 <div> <div style={{alignSelf: 'center', textAlign: 'center'}}> <b>Question:</b> {question}</div>
 <div style={{alignSelf: 'center', textAlign: 'center'}}> <b>Content:</b> {content}</div>
 <h3 style={{alignSelf: 'center', textAlign: 'center', paddingTop: '50px', color: '#03AC13'}}> Thank you! Your question has been submitted successfully</h3>
-  </div>}
+<div style={{alignSelf: 'center', textAlign: 'center', paddingTop: '10px'}}> <Nav.Link href="http://localhost:3000/answer">To navigate to answer screen click here</Nav.Link> </div>
+          </div>}
     </div>
   );
 

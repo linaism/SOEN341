@@ -20,6 +20,11 @@ const NavigationBar = () => {
               <NavDropdown title="Profile">
                 <NavDropdown.Item href="http://localhost:3000/">Sign Up/Login</NavDropdown.Item>
               </NavDropdown>
+              <Nav.Link href="http://localhost:3000/ask-question">
+                <button>
+                  Ask Question
+                </button>
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react'
 
+// Leaving the existing implementation here for now to avoid big merge conflicts. 
+// This page should be renamed "QuestionsPage" or "CurrentQuestions" and contain the list of questions 
+// submitted by any user. 
+
 class QuestionPage extends React.Component {
   constructor(props) {
     super(props)

@@ -22,6 +22,26 @@ const questionsDB = mysql.createConnection({
     database: 'questions',
 })
 
+app.get("/questions-get", (req, res) => {
+    questionsDB.query("SELECT * FROM questions_info", (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  });
+
+  app.get("/view/:id", (req, res) => {
+    questionsDB.query("SELECT * FROM Customers WHERE id = ?", id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  });
+
 app.post('/register', (req, res) => {
 
     const username = req.body.username;

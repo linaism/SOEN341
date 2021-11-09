@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import { useHistory } from "react-router-dom";
+import React, { useState } from 'react'
 import Axios from 'axios';
 
 const AskQuestionPage = () => {
@@ -8,14 +7,6 @@ const AskQuestionPage = () => {
   const [content, setContent] = useState(''); 
 
   const [questionList, setQuestionList] = useState([]);
-
-  const [redirect, setRedirect] = useState(false);
-  const history = useHistory();
-
-  const routeChange = () =>{ 
-    let path = '/view-question'; 
-    history.push(path);
-  }
 
   const ask = () => {
     Axios.post("http://localhost:5001/ask", {

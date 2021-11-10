@@ -9,6 +9,8 @@ const AskQuestionPage = () => {
 
   const [questionList, setQuestionList] = useState([]);
 
+  const [questionSubmitted, setQuestionSubmittedFlag] = useState(false);
+
   const ask = () => {
     Axios.post("http://localhost:5001/ask", {
       title: title,

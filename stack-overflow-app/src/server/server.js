@@ -7,12 +7,40 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-const db = mysql.createConnection({
+
+const loginDB = mysql.createConnection({
     user: 'root',
     host: 'localhost',
     password: 'password',
     database: 'loginsystem',
 })
+
+const questionsDB = mysql.createConnection({
+    user: 'root',
+    host: 'localhost',
+    password: 'password',
+    database: 'questions',
+})
+
+app.get("/questions-get", (req, res) => {
+    questionsDB.query("SELECT * FROM questions_info", (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  });
+
+  app.get("/view/:id", (req, res) => {
+    questionsDB.query("SELECT * FROM Customers WHERE id = ?", id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  });
 
 app.post('/register', (req, res) => {
 
@@ -20,7 +48,7 @@ app.post('/register', (req, res) => {
     const password = req.body.password;
     
 
-    db.query(
+    loginDB.query(
         "INSERT INTO logininfo (username, password) VALUES (?,?)", 
         [username, password], 
         (err, result) => {
@@ -33,7 +61,7 @@ app.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     
-    db.query(
+    loginDB.query(
         "SELECT * FROM logininfo WHERE username = ? AND password = ?", 
         [username, password], 
         (err, result) => {
@@ -56,7 +84,25 @@ app.post('/login', (req, res) => {
     );
 });
 
+app.post('/ask', (req, res) => {
+
+    const title = req.body.title;
+    const content = req.body.content;
+    
+
+    questionsDB.query(
+        "INSERT INTO questions_info (title, content) VALUES (?,?)", 
+        [title, content], 
+        (err, result) => {
+            if(err) {
+                res.send({err: err});
+            } else {
+                res.send(result);
+            }
+        }
+    );
+});
+
 app.listen(5001, () => {
     console.log("running server");
 });
-

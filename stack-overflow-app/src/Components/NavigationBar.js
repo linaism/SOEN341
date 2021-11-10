@@ -1,4 +1,4 @@
-import { Link, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.css'
 import {Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
@@ -16,10 +16,15 @@ const NavigationBar = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto" style={{fontSize:'15px', fontFamily:'sans-serif'}}>
               <Nav.Link href="http://localhost:3000/">Home</Nav.Link>
-              <Nav.Link href="http://localhost:3000/question">Questions</Nav.Link>
+              <Nav.Link href="http://localhost:3000/questions">Questions</Nav.Link>
               <NavDropdown title="Profile">
                 <NavDropdown.Item href="http://localhost:3000/">Sign Up/Login</NavDropdown.Item>
               </NavDropdown>
+              <Nav.Link href="http://localhost:3000/ask-question">
+                <button>
+                  Ask Question
+                </button>
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>

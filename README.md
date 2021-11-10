@@ -30,6 +30,9 @@ Using tag name as filter that categorizes our questions with other similar quest
 Display the number of votes on the answers. <br/>
 Creating and accessing personal account.
 
+## Block diagram:<img width="1327" alt="Block diagram stack overflow" src="https://user-images.githubusercontent.com/78437552/141160008-205c9edf-65bc-49af-9bec-1248302fb5f4.png">
+
+
 ## Team Members 
 * Elyes Bahri ([Github/Elyes-Bahri](https://github.com/elyes-bahri))
 * Kevin Emmanuel ([Github/Kenn55](https://github.com/kenn55))
@@ -38,3 +41,4 @@ Creating and accessing personal account.
 * Anusha Reddy Lattupally ([Github/Anusha-Reddy-Lattupally](https://github.com/Anusha-Reddy-Lattupally))
 * Anita Rao ([Github/ani-6292](https://github.com/ani-6292))
 * Juhi Rao ([Github/j-5884](https://github.com/j-5844))
+

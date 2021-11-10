@@ -21,17 +21,22 @@ const QuestionsPage = () => {
     <div>
       {questionList.map((question) => {
           return (
-            <div key={question.id}>
-              <p>Title: {question.title}</p>
-              <p>Content: {question.content}</p>
-              <Link to={{
-                pathname: `/view-question/${question.id}`,
+            <div>
+              <h1 style={{fontFamily:'Teko',fontSize:'30px', paddingTop:'40px', paddingLeft:'40px'}}>Question</h1>
+              <div key={question.question_id} >
+              <p style={{fontSize:'15px', fontFamily:'sans-serif', paddingLeft:'60px'}}>Title: {question.title}</p>
+              <p style={{fontSize:'15px', fontFamily:'sans-serif', paddingLeft:'60px'}}>Question: {question.content}</p>
+              <Link  style={{textDecoration:'none'}} to={{
+                pathname: `/view-question/${question.question_id}`,
                 state: { question: question }
               }}>
+                <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center',  paddingLeft:'60px'}}>
                   <Button>
-                      <p>View Question</p>
+                    <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'5px'}}>View Question</h3>
                   </Button>
+                </div>
               </Link>
+            </div>
             </div>
           );
         })}

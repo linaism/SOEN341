@@ -25,11 +25,11 @@ const AskQuestionPage = () => {
 
   return (
     <div >
-      <h1>Ask Question</h1>
+      <h1 style={{fontFamily:'Teko',fontSize:'30px', paddingTop:'40px', paddingLeft:'40px'}}>Ask Question</h1>
       <form onSubmit={ask}>
-        <h3>Title </h3>
-        <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
-          <input 
+        <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}>Title </h3>
+        <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center', paddingLeft:'60px'}}>
+          <input style={{paddingLeft:'10px'}}
             type="text"
             placeholder="Enter title"
             onChange={(e) => {
@@ -37,9 +37,9 @@ const AskQuestionPage = () => {
             }} 
           />
         </div>
-        <h3>Content</h3>
-        <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
-          <input 
+        <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}>Question</h3>
+        <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center', paddingLeft:'60px', paddingBottom:'20px'}}>
+          <input style={{paddingLeft:'10px', paddingBottom:'50px', paddingRight:'200px'}}
             type="text"
             placeholder="Enter content"
             onChange={(e) => {
@@ -47,8 +47,8 @@ const AskQuestionPage = () => {
             }} 
           />
         </div>
-        <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center'}}>
-          <button>Submit Question</button>
+        <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center',  paddingLeft:'60px'}}>
+          <button style={{fontSize:'15px', fontFamily:'sans-serif'}}>Submit Question</button>
         </div>
       </form>
     </div>

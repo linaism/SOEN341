@@ -22,6 +22,13 @@ const questionsDB = mysql.createConnection({
     database: 'questions',
 })
 
+const answersDB = mysql.createConnection({
+    user: 'root',
+    host: 'localhost',
+    password: 'password',
+    database: 'answers',
+})
+
 app.get("/questions-get", (req, res) => {
     questionsDB.query("SELECT * FROM questions_info", (err, result) => {
       if (err) {
@@ -33,7 +40,7 @@ app.get("/questions-get", (req, res) => {
   });
 
   app.get("/view/:id", (req, res) => {
-    questionsDB.query("SELECT * FROM Customers WHERE id = ?", id, (err, result) => {
+    questionsDB.query("SELECT * FROM question_info WHERE id = ?", id, (err, result) => {
       if (err) {
         console.log(err);
       } else {
@@ -41,6 +48,7 @@ app.get("/questions-get", (req, res) => {
       }
     });
   });
+
 
 app.post('/register', (req, res) => {
 
@@ -101,6 +109,33 @@ app.post('/ask', (req, res) => {
             }
         }
     );
+});
+
+app.post('/ans', (req, res) => {
+
+    const answer = req.body.answer;
+
+    answersDB.query(
+        "INSERT INTO answers_info (answer) VALUES (?)", 
+        [answer], 
+        (err, result) => {
+            if(err) {
+              console.log(err);
+            } else {
+              res.send(result);
+            }
+        }
+    );
+});
+
+app.get("/ansGet", (req, res) => {
+  answersDB.query("SELECT * FROM answers_info", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
 });
 
 app.listen(5001, () => {

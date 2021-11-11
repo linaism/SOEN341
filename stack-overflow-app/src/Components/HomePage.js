@@ -4,7 +4,6 @@ import Axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css'
 
 const HomePage = () => {
-
     const [usernameReg, setUsernameReg] = useState('');
     const [passwordReg, setPasswordReg] = useState('');
   
@@ -39,9 +38,6 @@ const HomePage = () => {
     };
   
     return (
-  
-  
-      
       <div className="HomePage">
         
         <div className="resgistration" style={{marginTop:'80px'}}>

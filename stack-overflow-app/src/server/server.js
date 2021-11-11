@@ -92,6 +92,21 @@ app.post('/login', (req, res) => {
     );
 });
 
+app.get("/login", (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  loginDB.query("SELECT * FROM logininfo WHERE username = ? AND password = ?", 
+  [username, password], 
+  (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 app.post('/ask', (req, res) => {
 
     const title = req.body.title;
@@ -114,10 +129,11 @@ app.post('/ask', (req, res) => {
 app.post('/ans', (req, res) => {
 
     const answer = req.body.answer;
+    const question_id = req.body.question_id;
 
     answersDB.query(
-        "INSERT INTO answers_info (answer) VALUES (?)", 
-        [answer], 
+        "INSERT INTO answers_info (answer, question_id, vote_count) VALUES (?, ?, ?)", 
+        [answer, question_id, 0], 
         (err, result) => {
             if(err) {
               console.log(err);
@@ -136,6 +152,61 @@ app.get("/ansGet", (req, res) => {
       res.send(result);
     }
   });
+});
+
+// Add vote information in voting database for given answer and question id
+app.post('/vote', (req, res) => {
+  const answer_id = req.body.answer_id;
+  const question_id = req.body.question_id;
+
+  questionsDB.query(
+      "INSERT INTO answer_votes (answer_id, question_id) VALUES (?, ?)", 
+      [answer_id, question_id], 
+      (err, result) => {
+          if(err) {
+            console.log(err);
+          } else {
+            res.send(result);
+          }
+      }
+  );
+});
+
+// Update number of votes in answer database
+app.put("/update-vote", (req, res) => {
+  const answer_id = req.body.answer_id;
+  let vote_count = 0;
+  if (req.body.vote_count) {vote_count = req.body.vote_count;}
+
+  answersDB.query(
+    "UPDATE answers_info SET vote_count = ? WHERE answer_id = ?",
+    [vote_count, answer_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
+// Update best answer
+app.put("/update-best", (req, res) => {
+  const question_id = req.body.question_id;
+  const best_answer_id = req.body.best_answer_id;
+
+  questionsDB.query(
+    "UPDATE questions_info SET best_answer_id = ? WHERE question_id = ?",
+    [best_answer_id, question_id],
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
 });
 
 app.listen(5001, () => {

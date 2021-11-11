@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from "react-router-dom";
 import Axios from 'axios';
 
@@ -9,32 +9,75 @@ const ViewQuestionPage = () => {
 
     const [answerList, setAnswerList] = useState([]);
 
-    const [bestAnswer, setBest] = useState([]);
+    const [bestAnswer, setBest] = useState('');
+    const [bestSubmitted, setBestSubmitted] = useState(false);
+
+    useEffect(() => {
+        Axios.get("http://localhost:5001/ansGet").then((response) => {
+            setAnswerList(response.data);
+        });
+    });
 
     const addAnswer = () => {
         Axios.post("http://localhost:5001/ans", {
           answer: answer,
+          question_id: state.question.question_id,
         }).then(() => {
           setAnswerList([
             ...answerList,
             {
                 answer: answer,
+                question_id: state.question.question_id,
             },
           ]);
         });
-      };
+    };
+    
+    const best = (answer) =>{ 
+        Axios.put("http://localhost:5001/update-best", { answer: answer }).then(
+            (response) => {
+                setBest(answer);
+                setBestSubmitted(true);
+            }
+        );
+    };
 
-      const best = () =>{ 
-          setBest([
-        ...bestAnswer,
-        {
-            answer: answer,
-        } 
-        ])
-      };
-
-      const [counter, setCounter] = useState(0);
-      const incrementCounter = () => setCounter(counter + 1);
+    const incrementVoteCount = (id, count) => {
+        Axios.put("http://localhost:5001/update-vote", { vote_count: count, answer_id: id }).then(
+            (response) => {
+            setAnswerList(
+                answerList.map((val) => {
+                return val.answer_id === id
+                    ? {
+                        answer_id: val.answer_id,
+                        question_id: val.question_id,
+                        answer: val.answer,
+                        vote_count: count,
+                    }
+                    : val;
+                })
+            );
+            }
+        );
+    };
+    const decrementVoteCount = (id, count) => {
+        Axios.put("http://localhost:5001/update-vote", { vote_count: count, answer_id: id }).then(
+            (response) => {
+            setAnswerList(
+                answerList.map((val) => {
+                return val.answer_id === id
+                    ? {
+                        answer_id: val.answer_id,
+                        question_id: val.question_id,
+                        answer: val.answer,
+                        vote_count: count,
+                    }
+                    : val;
+                })
+            );
+            }
+        );
+    };
 
     return (
         <div>
@@ -45,26 +88,25 @@ const ViewQuestionPage = () => {
             </div>
 
             <div className="App">
-                {bestAnswer.map((value) => {
-                    return (
+                {bestSubmitted &&
                     <div className="answer">
                         <div style={{fontSize:'10px', fontFamily:'sans-serif', paddingTop:'40px', paddingLeft:'40px'}}>
                             <h1 style={{fontFamily:'Teko',fontSize:'30px'}}>Best Answer</h1>
-                            <h3 style={{fontSize:'15px', paddingLeft:'20px'}}> Answer: {value.answer}</h3>
+                            <h3 style={{fontSize:'15px', paddingLeft:'20px'}}> Answer: {bestAnswer}</h3>
                         </div>
                     </div>
-                    );}
-                )}
+                }
                 <div className="answers">
                 <h1 style={{fontFamily:'Teko',fontSize:'30px', paddingTop:'40px', paddingLeft:'40px'}}>Answers</h1>
-                    {answerList.map((val) => {
-                        return (
+                    {answerList.map((val, key) => {
+                        return ((val.question_id === state.question.question_id) &&
                         <div className="answer">
                             <div style={{fontSize:'10px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}>
                                 <h3 style={{fontSize:'15px'}}>Answer: {val.answer}</h3>
-                                <button onClick={best}>Best Answer</button>
-                                <button style={{marginLeft:'10px'}} onClick={incrementCounter}>Vote</button>
-                                <text style={{marginLeft:'10px'}}>{counter}</text>
+                                <button onClick={() => {best(val.answer);}}>Best Answer</button>
+                                <button style={{marginLeft:'10px'}} onClick={() => {incrementVoteCount(val.answer_id, val.vote_count+1);}}>Upvote</button>
+                                <button style={{marginLeft:'10px'}} onClick={() => {decrementVoteCount(val.answer_id, val.vote_count-1);}}>Downvote</button>
+                                <text style={{marginLeft:'10px'}}>{val.vote_count}</text>
                             </div>
                         </div>
                         );}

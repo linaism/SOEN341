@@ -3,10 +3,6 @@ import { Link } from "react-router-dom";
 import { Button } from 'semantic-ui-react';
 import Axios from 'axios';
 
-// Leaving the existing implementation here for now to avoid big merge conflicts. 
-// This page should be renamed "QuestionsPage" or "CurrentQuestions" and contain the list of questions 
-// submitted by any user. 
-
 const QuestionsPage = () => {
 
   const [questionList, setQuestionList] = useState([]);

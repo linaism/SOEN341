@@ -1,22 +1,82 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useParams } from 'react';
 import { useLocation } from "react-router-dom";
 import Axios from 'axios';
 
 const ViewQuestionPage = () => {
     const { state } = useLocation();
 
-    const [answer, setAnswer] = useState('');
+    // const [data, setData] = useState({ answers: [], user: '' });
+    const [questionUser, setUsername] = useState('');
 
+    const [answer, setAnswer] = useState('');
     const [answerList, setAnswerList] = useState([]);
 
     const [bestAnswer, setBest] = useState('');
     const [bestSubmitted, setBestSubmitted] = useState(false);
 
+    // useEffect(() => {
+    //     await Axios.get("http://localhost:5001/ansGet").then((response) => {
+    //         setAnswerList(response.data);
+    //     });
+    //     await Axios.get(`http://localhost:5001/user/${state.question.user_id}`).then((response) => {
+    //         setUsername(response.username);
+    //         console.log(response);
+    //     })
+    // });
+
+    // useEffect(() => {
+    //     await Axios.get(`http://localhost:5001/user/${state.question.user_id}`).then((response) => {
+    //         setUsername(response.username);
+    //         console.log(response);
+    //     })
+    // });
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //       const respGlobal = await axios(
+    //         `https://api.github.com/users/${username}`
+    //       );
+    //       const respRepos = await axios(
+    //         `https://api.github.com/users/${username}/repos`
+    //       );
+    
+    //       setGitData({ data: respGlobal.data, repos: respGlobal.data });
+    //     };
+    
+    //     fetchData();
+    //   }, []);
+
+
+
     useEffect(() => {
-        Axios.get("http://localhost:5001/ansGet").then((response) => {
-            setAnswerList(response.data);
-        });
-    });
+        fetch();
+      });
+
+    const fetch = () => {
+        const request1 = Axios.get("http://localhost:5001/ansGet");
+        const request2 = Axios.get(`http://localhost:5001/user/${state.question.user_id}`);
+        Axios.all([request1, request2]).then(Axios.spread((...responses) => {
+            const r1 = responses[0]
+            const r2 = responses[1]
+            setAnswerList(r1.data);
+            setUsername(r2.data[0].username);
+          })).catch(err => {
+            console.error(err);
+          })
+    };
+    
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //       const answers = await Axios.get("http://localhost:5001/ansGet");
+    //       const username = await Axios.get(`http://localhost:5001/user/${state.question.user_id}`);
+    //     setAnswerList(answers.data);
+    //     setUsername(username.username);
+    //     // setData({ answers: getAnswers.data, user: getUsername.data });
+    //     };
+    
+    //     fetchData();
+    //   }, []);
 
     const addAnswer = () => {
         Axios.post("http://localhost:5001/ans", {
@@ -60,6 +120,7 @@ const ViewQuestionPage = () => {
             }
         );
     };
+
     const decrementVoteCount = (id, count) => {
         Axios.put("http://localhost:5001/update-vote", { vote_count: count, answer_id: id }).then(
             (response) => {
@@ -85,6 +146,7 @@ const ViewQuestionPage = () => {
             <div>
                 <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}> Title: {state.question.title} </h3>
                 <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}> Content: {state.question.content} </h3>
+                <p>Submitted by: {questionUser}</p>
             </div>
 
             <div className="App">
@@ -100,7 +162,7 @@ const ViewQuestionPage = () => {
                 <h1 style={{fontFamily:'Teko',fontSize:'30px', paddingTop:'40px', paddingLeft:'40px'}}>Answers</h1>
                     {answerList.map((val, key) => {
                         return ((val.question_id === state.question.question_id) &&
-                        <div className="answer">
+                        <div className="answer" key={val.answer_id}>
                             <div style={{fontSize:'10px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}>
                                 <h3 style={{fontSize:'15px'}}>Answer: {val.answer}</h3>
                                 <button onClick={() => {best(val.answer);}}>Best Answer</button>

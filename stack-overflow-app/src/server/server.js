@@ -2,11 +2,36 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require("cors");
 
+const bodyParser = require('body-parser'); 
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const oneDay = 1000 * 60 * 60 * 24;
+
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:3000", 
+  "http://localhost:3000/ask-question", 
+  "http://localhost:3000/view-question/:id"], 
+  methods: ["GET", "POST"], 
+  credentials: true
+}));
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
+app.use(session({
+  key: "userId",
+  secret: "ravioli",
+  resave: false, 
+  saveUninitialized: false, 
+  cookie: {
+    maxAge: oneDay
+  }
+}));
 
 const loginDB = mysql.createConnection({
     user: 'root',
@@ -55,14 +80,19 @@ app.post('/register', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     
-
-    loginDB.query(
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+      if (err) {
+        console.log(err);
+      }
+      loginDB.query(
         "INSERT INTO logininfo (username, password) VALUES (?,?)", 
-        [username, password], 
+        [username, hash], 
         (err, result) => {
             console.log(err);
         }
-    );
+      );
+    })
+    
 });
 
 app.post('/login', (req, res) => {
@@ -70,22 +100,27 @@ app.post('/login', (req, res) => {
     const password = req.body.password;
     
     loginDB.query(
-        "SELECT * FROM logininfo WHERE username = ? AND password = ?", 
-        [username, password], 
+        "SELECT * FROM logininfo WHERE username = ?;", 
+        username, 
         (err, result) => {
 
-            if(err)
-            {
+            if(err) {
                 res.send({err: err});
             }
 
-            if(result.length > 0)
-            {
-                res.send(result);
+            if(result.length > 0) {
+                bcrypt.compare(password, result[0].password, (err, response) => {
+                  if (response) {
+                    req.session.user = result;
+                    console.log(req.session.user);
+                    res.send(result);
+                  } else {
+                    res.send({ message: "Wrong username/password combination!"});
+                  }
+                })
             }
-            else
-            {
-                res.send({ message: "Wrong username/password combination!"});
+            else {
+                res.send({ message: "User doesn't exist"});
             }
             
         }
@@ -93,29 +128,39 @@ app.post('/login', (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  if (req.session.user) {
+    res.send({loggedIn: true, user: req.session.user}); 
+  } else {
+    res.send({loggedIn: false}); 
+  }
+  // const username = req.body.username;
+  // const password = req.body.password;
 
-  loginDB.query("SELECT * FROM logininfo WHERE username = ? AND password = ?", 
-  [username, password], 
-  (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
-    }
-  });
+  // loginDB.query("SELECT * FROM logininfo WHERE username = ? AND password = ?", 
+  // [username, password], 
+  // (err, result) => {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     res.send(result);
+  //   }
+  // });
+});
+
+app.get('/logout',(req,res) => {
+  req.session.destroy();
+  res.redirect('/');
 });
 
 app.post('/ask', (req, res) => {
 
     const title = req.body.title;
     const content = req.body.content;
-    
+    const user_id = req.body.user_id;
 
     questionsDB.query(
-        "INSERT INTO questions_info (title, content) VALUES (?,?)", 
-        [title, content], 
+        "INSERT INTO questions_info (title, content, user_id) VALUES (?,?,?)", 
+        [title, content, user_id], 
         (err, result) => {
             if(err) {
                 res.send({err: err});
@@ -207,6 +252,22 @@ app.put("/update-best", (req, res) => {
       }
     }
   );
+});
+
+// Mapping ids to values 
+app.get("/user/:id", (req, res) => {
+  const id = req.params.id;
+  loginDB.query("SELECT username FROM logininfo WHERE id = ?", 
+    id,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+
 });
 
 app.listen(5001, () => {

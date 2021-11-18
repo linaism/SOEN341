@@ -8,20 +8,26 @@ const QuestionsPage = () => {
   const [questionList, setQuestionList] = useState([]);
 
   useEffect(() => {
+    getQuestions();
+    return () => {
+      setQuestionList([]); 
+    };
+  }, []);
+
+  const getQuestions = () => {
     Axios.get("http://localhost:5001/questions-get").then((response) => {
-        setQuestionList(response.data);
+      setQuestionList(response.data);
     });
-  });
+  };
 
   return (
     <div>
       {questionList.map((question) => {
           return (
-            <div>
+            <div key={question.question_id}>
               <h1 style={{fontFamily:'Teko',fontSize:'30px', paddingTop:'40px', paddingLeft:'40px'}}>Question</h1>
-              <div key={question.question_id} >
+              <div >
               <p style={{fontSize:'15px', fontFamily:'sans-serif', paddingLeft:'60px'}}>Title: {question.title}</p>
-              <p style={{fontSize:'15px', fontFamily:'sans-serif', paddingLeft:'60px'}}>Question: {question.content}</p>
               <Link  style={{textDecoration:'none'}} to={{
                 pathname: `/view-question/${question.question_id}`,
                 state: { question: question }

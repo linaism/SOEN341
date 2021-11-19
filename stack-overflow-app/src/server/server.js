@@ -175,10 +175,11 @@ app.post('/ans', (req, res) => {
 
     const answer = req.body.answer;
     const question_id = req.body.question_id;
+    const user_id = req.body.user_id;
 
     answersDB.query(
-        "INSERT INTO answers_info (answer, question_id, vote_count) VALUES (?, ?, ?)", 
-        [answer, question_id, 0], 
+        "INSERT INTO answers_info (answer, question_id, vote_count, user_id) VALUES (?, ?, ?, ?)", 
+        [answer, question_id, 0, user_id], 
         (err, result) => {
             if(err) {
               console.log(err);

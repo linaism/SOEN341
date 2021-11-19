@@ -5,8 +5,9 @@ import Axios from 'axios';
 const ViewQuestionPage = () => {
     const { state } = useLocation();
 
-    // const [data, setData] = useState({ answers: [], user: '' });
     const [questionUser, setUsername] = useState('');
+    const [answerUser, setAnswerUsername] = useState('');
+    const [answerUserId, setUserId] = useState(0);
 
     const [answer, setAnswer] = useState('');
     const [answerList, setAnswerList] = useState([]);
@@ -14,39 +15,9 @@ const ViewQuestionPage = () => {
     const [bestAnswer, setBest] = useState('');
     const [bestSubmitted, setBestSubmitted] = useState(false);
 
-    // useEffect(() => {
-    //     await Axios.get("http://localhost:5001/ansGet").then((response) => {
-    //         setAnswerList(response.data);
-    //     });
-    //     await Axios.get(`http://localhost:5001/user/${state.question.user_id}`).then((response) => {
-    //         setUsername(response.username);
-    //         console.log(response);
-    //     })
-    // });
+    const [loginStatus, setLoginStatus] = useState(false);
 
-    // useEffect(() => {
-    //     await Axios.get(`http://localhost:5001/user/${state.question.user_id}`).then((response) => {
-    //         setUsername(response.username);
-    //         console.log(response);
-    //     })
-    // });
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //       const respGlobal = await axios(
-    //         `https://api.github.com/users/${username}`
-    //       );
-    //       const respRepos = await axios(
-    //         `https://api.github.com/users/${username}/repos`
-    //       );
-    
-    //       setGitData({ data: respGlobal.data, repos: respGlobal.data });
-    //     };
-    
-    //     fetchData();
-    //   }, []);
-
-
+    Axios.defaults.withCredentials = true;
 
     useEffect(() => {
         fetch();
@@ -55,39 +26,43 @@ const ViewQuestionPage = () => {
     const fetch = () => {
         const request1 = Axios.get("http://localhost:5001/ansGet");
         const request2 = Axios.get(`http://localhost:5001/user/${state.question.user_id}`);
-        Axios.all([request1, request2]).then(Axios.spread((...responses) => {
-            const r1 = responses[0]
-            const r2 = responses[1]
+        const request3 = Axios.get("http://localhost:5001/login");
+        Axios.all([request1, request2, request3]).then(Axios.spread((...responses) => {
+            const r1 = responses[0];
+            const r2 = responses[1];
+            const r3 = responses[2];
             setAnswerList(r1.data);
             setUsername(r2.data[0].username);
+            console.log(responses);
+            if (r3.data.loggedIn === true) {
+                setLoginStatus(r3.data.loggedIn);
+                setUserId(r3.data.user[0].id);
+            }
           })).catch(err => {
             console.error(err);
           })
     };
-    
 
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //       const answers = await Axios.get("http://localhost:5001/ansGet");
-    //       const username = await Axios.get(`http://localhost:5001/user/${state.question.user_id}`);
-    //     setAnswerList(answers.data);
-    //     setUsername(username.username);
-    //     // setData({ answers: getAnswers.data, user: getUsername.data });
-    //     };
-    
-    //     fetchData();
-    //   }, []);
+    const onClickHandler = () => {
+        if (loginStatus) {
+            addAnswer();
+        } else {
+            window.alert('Unable to submit. You must be logged in to answer a question.');
+        }
+    };
 
     const addAnswer = () => {
         Axios.post("http://localhost:5001/ans", {
           answer: answer,
           question_id: state.question.question_id,
+          user_id: answerUserId,
         }).then(() => {
           setAnswerList([
             ...answerList,
             {
                 answer: answer,
                 question_id: state.question.question_id,
+                user_id: answerUserId,
             },
           ]);
         });
@@ -146,7 +121,7 @@ const ViewQuestionPage = () => {
             <div>
                 <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}> Title: {state.question.title} </h3>
                 <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}> Content: {state.question.content} </h3>
-                <p>Submitted by: {questionUser}</p>
+                <p style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'5px', paddingLeft:'60px'}}>Submitted by: {questionUser}</p>
             </div>
 
             <div className="App">
@@ -189,7 +164,7 @@ const ViewQuestionPage = () => {
                         />
                     </div>
                     <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center',  paddingLeft:'60px', paddingBottom:'60px'}}>
-                        <button onClick={addAnswer}>Add Answer</button>
+                        <button onClick={onClickHandler}>Add Answer</button>
                     </div>
                 </div>
                 

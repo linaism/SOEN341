@@ -1,27 +1,50 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Axios from 'axios';
 
 const AskQuestionPage = () => {
 
   const [title, setTitle] = useState(''); 
   const [content, setContent] = useState(''); 
+  const [userId, setUserId] = useState(0);
 
   const [questionList, setQuestionList] = useState([]);
+  const [loginStatus, setLoginStatus] = useState(false);
+
+  Axios.defaults.withCredentials = true;
 
   const ask = () => {
-    Axios.post("http://localhost:5001/ask", {
-      title: title,
-      content: content,
-    }).then(() => {
-      setQuestionList([
-        ...questionList,
-        {
-          title: title,
-          content: content,
-        },
-      ]);
-    });
+    if (loginStatus) {
+      Axios.post("http://localhost:5001/ask", {
+        title: title,
+        content: content,
+        user_id: userId,
+      }).then(() => {
+        setQuestionList([
+          ...questionList,
+          {
+            title: title,
+            content: content,
+            user_id: userId,
+          },
+        ]);
+      });
+    } 
   };
+
+  const submit = () => {
+    if (!loginStatus) {
+      window.alert('Unable to submit. You must be logged in to ask question.');
+    }
+  };
+
+  useEffect(() => {
+    Axios.get("http://localhost:5001/login").then((response) => {
+      if (response.data.loggedIn === true) {
+        setLoginStatus(response.data.loggedIn);
+        setUserId(response.data.user[0].id);
+      }  
+    });
+  }, []);
 
   return (
     <div >
@@ -48,7 +71,7 @@ const AskQuestionPage = () => {
           />
         </div>
         <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center',  paddingLeft:'60px'}}>
-          <button style={{fontSize:'15px', fontFamily:'sans-serif'}}>Submit Question</button>
+        <button style={{fontSize:'15px', fontFamily:'sans-serif'}} onClick={submit}>Submit Question</button>
         </div>
       </form>
     </div>

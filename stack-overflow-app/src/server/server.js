@@ -2,11 +2,37 @@ const express = require('express');
 const mysql = require('mysql');
 const cors = require("cors");
 
+const bodyParser = require('body-parser'); 
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const oneDay = 1000 * 60 * 60 * 24;
+
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:3000", 
+  "http://localhost:3000/ask-question", 
+  "http://localhost:3000/view-question/:id",
+], 
+  methods: ["GET", "POST", "PUT"], 
+  credentials: true
+}));
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
+app.use(session({
+  key: "userId",
+  secret: "ravioli",
+  resave: false, 
+  saveUninitialized: false, 
+  cookie: {
+    maxAge: oneDay
+  }
+}));
 
 const loginDB = mysql.createConnection({
     user: 'root',
@@ -55,14 +81,19 @@ app.post('/register', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     
-
-    loginDB.query(
+    bcrypt.hash(password, saltRounds, (err, hash) => {
+      if (err) {
+        console.log(err);
+      }
+      loginDB.query(
         "INSERT INTO logininfo (username, password) VALUES (?,?)", 
-        [username, password], 
+        [username, hash], 
         (err, result) => {
             console.log(err);
         }
-    );
+      );
+    })
+    
 });
 
 app.post('/login', (req, res) => {
@@ -70,22 +101,27 @@ app.post('/login', (req, res) => {
     const password = req.body.password;
     
     loginDB.query(
-        "SELECT * FROM logininfo WHERE username = ? AND password = ?", 
-        [username, password], 
+        "SELECT * FROM logininfo WHERE username = ?;", 
+        username, 
         (err, result) => {
 
-            if(err)
-            {
+            if(err) {
                 res.send({err: err});
             }
 
-            if(result.length > 0)
-            {
-                res.send(result);
+            if(result.length > 0) {
+                bcrypt.compare(password, result[0].password, (err, response) => {
+                  if (response) {
+                    req.session.user = result;
+                    console.log(req.session.user);
+                    res.send(result);
+                  } else {
+                    res.send({ message: "Wrong username/password combination!"});
+                  }
+                })
             }
-            else
-            {
-                res.send({ message: "Wrong username/password combination!"});
+            else {
+                res.send({ message: "User doesn't exist"});
             }
             
         }
@@ -93,29 +129,26 @@ app.post('/login', (req, res) => {
 });
 
 app.get("/login", (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  if (req.session.user) {
+    res.send({loggedIn: true, user: req.session.user}); 
+  } else {
+    res.send({loggedIn: false}); 
+  }
+});
 
-  loginDB.query("SELECT * FROM logininfo WHERE username = ? AND password = ?", 
-  [username, password], 
-  (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
-    }
-  });
+app.get('/logout',(req,res) => {
+  req.session.destroy();
+  res.redirect('/');
 });
 
 app.post('/ask', (req, res) => {
-
     const title = req.body.title;
     const content = req.body.content;
-    
+    const user_id = req.body.user_id;
 
     questionsDB.query(
-        "INSERT INTO questions_info (title, content) VALUES (?,?)", 
-        [title, content], 
+        "INSERT INTO questions_info (title, content, user_id) VALUES (?,?,?)", 
+        [title, content, user_id], 
         (err, result) => {
             if(err) {
                 res.send({err: err});
@@ -130,10 +163,11 @@ app.post('/ans', (req, res) => {
 
     const answer = req.body.answer;
     const question_id = req.body.question_id;
+    const user_id = req.body.user_id;
 
     answersDB.query(
-        "INSERT INTO answers_info (answer, question_id, vote_count) VALUES (?, ?, ?)", 
-        [answer, question_id, 0], 
+        "INSERT INTO answers_info (answer, question_id, vote_count, user_id) VALUES (?, ?, ?, ?)", 
+        [answer, question_id, 0, user_id], 
         (err, result) => {
             if(err) {
               console.log(err);
@@ -154,23 +188,127 @@ app.get("/ansGet", (req, res) => {
   });
 });
 
-// Add vote information in voting database for given answer and question id
-app.post('/vote', (req, res) => {
-  const answer_id = req.body.answer_id;
-  const question_id = req.body.question_id;
+// Get request to know whether entry exists
+app.get('/vote', (req, res) => {
+  const answer_id = req.query.answer_id;
+  const question_id = req.query.question_id;
+  const user_id = req.query.user_id;
 
-  questionsDB.query(
-      "INSERT INTO answer_votes (answer_id, question_id) VALUES (?, ?)", 
-      [answer_id, question_id], 
-      (err, result) => {
-          if(err) {
-            console.log(err);
-          } else {
-            res.send(result);
-          }
+  answersDB.query(
+    "SELECT * FROM votes_info WHERE answer_id = ? AND question_id = ? AND user_id = ?",
+    [answer_id, question_id, user_id], 
+    (err, result) => {
+      if(err) {
+        console.log(err);
+      } else {
+        res.send(result);
       }
+    }
   );
 });
+
+app.post('/vote', (req, res) => {
+  const question_id = req.body.question_id;
+  const answer_id = req.body.answer_id;
+  const user_id = req.body.user_id;
+  const type = req.body.type;
+
+  answersDB.query(
+    "INSERT INTO votes_info (question_id, answer_id, user_id, type) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE type = ?",
+    [question_id, answer_id, user_id, type, type], 
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  )
+});
+
+// Too long and potentially useless, delet
+// Add vote information in voting database for given answer and question id
+// app.put('/vote', (req, res) => {
+//   const answer_id = req.body.answer_id;
+//   const question_id = req.body.question_id;
+//   const user_id = req.body.user_id;
+//   const type = req.body.type;
+//   let vote_count = 0;
+//   if (req.body.vote_count) {vote_count = req.body.vote_count;}
+
+//   answersDB.query(
+//     "SELECT * FROM votes_info WHERE answer_id = ? AND question_id = ? AND user_id = ?",
+//     [answer_id, question_id, user_id],
+//     (err, result) => {
+//       if (err) {
+//         console.log(err);
+//       } 
+//       if (!result.length) { // If there is no vote entry for this user in the database 
+//         answersDB.query( // Add new vote entry 
+//           "INSERT INTO votes_info (answer_id, question_id, user_id, type) VALUES (?, ?, ?, ?)",
+//           [answer_id, question_id, user_id, type], 
+//           (err, res) => {
+//               if(err) {
+//                 console.log(err);
+//               } else {
+//                 res.send(res);
+//               }
+//           }
+//         );
+//         answersDB.query( // Update vote count in answers_info database ******DOUBLE CHECK******
+//           "UPDATE answers_info SET vote_count = ? WHERE answer_id = ?",
+//           [vote_count, answer_id],
+//           (err, res) => {
+//             if (err) {
+//               console.log(err);
+//             } else {
+//               res.send(res);
+//             }
+//           }
+//         );
+//       } else {
+//         if (result.type != type)
+//         answersDB.query(
+//           "UPDATE votes_info SET vote_count = ? WHERE answer_id = ?"
+//         )
+//       }
+//     });
+
+//   answersDB.query(
+//       "INSERT INTO votes_info (answer_id, question_id, user_id, type) VALUES (?, ?, ?, ?)", 
+//       [answer_id, question_id, user_id, type], 
+//       (err, result) => {
+//           if(err) {
+//             console.log(err);
+//           } else {
+//             res.send(result);
+//           }
+//       }
+//   );
+// });
+
+// Review
+// Update number of votes in voting database
+// app.put("/vote", (req, res) => {
+  // const answer_id = req.body.answer_id;
+  // const question_id = req.body.question_id;
+  // const user_id = req.body.user_id;
+  // const type = req.body.type;
+  // let vote_count = 0;
+  // if (req.body.vote_count) {vote_count = req.body.vote_count;}
+
+  // questionsDB.query(
+  //   "UPDATE answer_votes SET type = ? WHERE answer_id = ?",
+  //   [vote_count, answer_id],
+  //   (err, result) => {
+  //     if (err) {
+  //       console.log(err);
+  //     } else {
+  //       res.send(result);
+  //     }
+  //   }
+  // );
+// });
 
 // Update number of votes in answer database
 app.put("/update-vote", (req, res) => {
@@ -207,6 +345,22 @@ app.put("/update-best", (req, res) => {
       }
     }
   );
+});
+
+// Mapping ids to usernames 
+app.get("/user/:id", (req, res) => {
+  const id = req.params.id;
+  loginDB.query("SELECT username FROM logininfo WHERE id = ?", 
+    id,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+
 });
 
 app.listen(5001, () => {

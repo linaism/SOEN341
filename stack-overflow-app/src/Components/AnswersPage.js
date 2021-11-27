@@ -11,7 +11,6 @@ const AnswersPage = () => {
         setAnswerSubmittedFlag(true);
     };
 
-
     //Styling to modify
 
     const Askquestion ={

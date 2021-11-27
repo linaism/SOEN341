@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import './Login.css';
 import Axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css'
-import {Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 
 const HomePage = () => {
 

@@ -5,6 +5,8 @@ const AskQuestionPage = () => {
 
   const [questionSubmitted, setQuestionSubmittedFlag] = useState(false);
   const [question, setQuestion] = useState(''); 
+  const [title, setTitle] = useState(''); 
+  const [tags, setTags] = useState([]);
   const [content, setContent] = useState(''); 
   const [userId, setUserId] = useState(0);
 

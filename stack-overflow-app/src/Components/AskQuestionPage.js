@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import Axios from 'axios';
-import {Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 
 const AskQuestionPage = () => {
 
@@ -12,14 +11,7 @@ const AskQuestionPage = () => {
   const [questionList, setQuestionList] = useState([]);
   const [loginStatus, setLoginStatus] = useState(false);
 
-<<<<<<< HEAD
-  //const [redirect, setRedirect] = useState(false);
-  const [questionSubmitted, setQuestionSubmittedFlag] = useState(false);
-  const history = useHistory();
-
-=======
   Axios.defaults.withCredentials = true;
->>>>>>> e53266fa30abfe10df3d8555c8de67f0be57276c
 
   useEffect(() => {
     Axios.get("http://localhost:5001/login").then((response) => {
@@ -138,7 +130,7 @@ const AskQuestionPage = () => {
     }
     {questionSubmitted && 
     <div style={{margin: "15%"}}> 
-      <h3 style={title, {marginTop: "15%"}}>Title</h3>
+      <h3 style={title}>Title</h3>
       <p style={{fontSize: 20}}> {question}</p>
       <h3 style={title}>Question</h3>
       <p style={{fontSize: 20}}> {content}</p>

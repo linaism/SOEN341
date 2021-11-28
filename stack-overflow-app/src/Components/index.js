@@ -4,4 +4,3 @@ export { default as HomePage } from "./HomePage";
 export { default as QuestionsPage } from "./QuestionsPage";
 export { default as AskQuestionPage } from "./AskQuestionPage";
 export { default as ViewQuestionPage } from "./ViewQuestionPage";
-export { default as AnswersPage } from "./AnswersPage";

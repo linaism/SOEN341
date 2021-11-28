@@ -3,7 +3,8 @@ import Axios from 'axios';
 
 const AskQuestionPage = () => {
 
-  const [title, setTitle] = useState(''); 
+  const [questionSubmitted, setQuestionSubmittedFlag] = useState(false);
+  const [question, setQuestion] = useState(''); 
   const [content, setContent] = useState(''); 
   const [userId, setUserId] = useState(0);
 
@@ -11,6 +12,15 @@ const AskQuestionPage = () => {
   const [loginStatus, setLoginStatus] = useState(false);
 
   Axios.defaults.withCredentials = true;
+
+  useEffect(() => {
+    Axios.get("http://localhost:5001/login").then((response) => {
+      if (response.data.loggedIn === true) {
+        setLoginStatus(response.data.loggedIn);
+        setUserId(response.data.user[0].id);
+      }  
+    });
+  }, []);
 
   const ask = () => {
     if (loginStatus) {
@@ -28,6 +38,7 @@ const AskQuestionPage = () => {
           },
         ]);
       });
+      setQuestionSubmittedFlag(true);
     } 
   };
 
@@ -36,47 +47,97 @@ const AskQuestionPage = () => {
       window.alert('Unable to submit. You must be logged in to ask question.');
     }
   };
+  const Askquestion ={
+    fontSize: 40,
+    textAlign: "left",
+    paddingTop: "100px",
+    fontFamily: 'Teko',
 
-  useEffect(() => {
-    Axios.get("http://localhost:5001/login").then((response) => {
-      if (response.data.loggedIn === true) {
-        setLoginStatus(response.data.loggedIn);
-        setUserId(response.data.user[0].id);
-      }  
-    });
-  }, []);
+  }
+  const title = {
+    fontSize: 24,
+    textAlign: "left",
+    paddingTop: "5px",
+  }
+
+  const questionBox = {
+    position: 'center',
+    margin: "5px 20px 20px 20px", 
+    backgroundColor: "#F9FAFD",
+    borderRadius: "11px", 
+    padding: "20px"
+  }
+  
+  const buttonStyle1 = {
+    fontSize: 18,
+    color: "white",
+    padding: "10px",
+    backgroundColor: "#8C98AF",
+    borderRadius: 5,
+    borderColor: "#8C98AF",
+    width: '180px', 
+    margin: "10px 0px 10px 0px"
+  }
+
+  const inputStyle1 = {
+    padding: "10px",
+    backgroundColor: "white",
+    width: '100%',
+    border:'0px',
+  }
 
   return (
-    <div >
-      <h1 style={{fontFamily:'Teko',fontSize:'30px', paddingTop:'40px', paddingLeft:'40px'}}>Ask Question</h1>
-      <form onSubmit={ask}>
-        <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}>Title </h3>
-        <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center', paddingLeft:'60px'}}>
-          <input style={{paddingLeft:'10px'}}
-            type="text"
-            placeholder="Enter title"
-            onChange={(e) => {
-              setTitle(e.target.value);
-            }} 
-          />
+  <div className="container"> 
+    {!questionSubmitted && 
+      <div> 
+        <div>
+          <h2 style={Askquestion}> Ask a question </h2> 
         </div>
-        <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'60px'}}>Question</h3>
-        <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center', paddingLeft:'60px', paddingBottom:'20px'}}>
-          <input style={{paddingLeft:'10px', paddingBottom:'50px', paddingRight:'200px'}}
-            type="text"
-            placeholder="Enter content"
-            onChange={(e) => {
-              setContent(e.target.value);
-            }} 
-          />
+        <div style={questionBox}>
+          <h3 style={title}> Title </h3>
+          <p> Insert a title that describes your question </p>
+          <div>
+            <form onSubmit={ask}>
+              <div>
+                <input style={inputStyle1} 
+                  type="text"
+                  border='none'
+                  outline='none'
+                  placeholder="E.g How to connect MySQL database to react app"
+                  onChange={(e) => {setQuestion(e.target.value);}}
+                />
+              </div>
+              <h3 style={title}> Question </h3>
+              <p> Write your question here. You can go into as much detail as you want </p>              
+              <div>
+                <textarea 
+                  type="text"
+                  rows='5'
+                  border='0px'
+                  outline='0px'
+                  placeholder="Explain your question..."
+                  style={inputStyle1} 
+                  onChange={(e) => {setContent(e.target.value);}}
+                />
+              </div>
+              <div style={{ alignSelf: 'left', textAlign: 'right', bottom: '0px'}}>
+                <button style={buttonStyle1} onClick={submit}>Submit Question</button>
+              </div>
+            </form>
+          </div>
         </div>
-        <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center',  paddingLeft:'60px'}}>
-        <button style={{fontSize:'15px', fontFamily:'sans-serif'}} onClick={submit}>Submit Question</button>
-        </div>
-      </form>
-    </div>
+      </div>
+    }
+    {questionSubmitted && 
+    <div style={{margin: "15%"}}> 
+      <h3 style={title}>Title</h3>
+      <p style={{fontSize: 20}}> {question}</p>
+      <h3 style={title}>Question</h3>
+      <p style={{fontSize: 20}}> {content}</p>
+      <h3 style={{alignSelf: 'center', textAlign: 'center', paddingTop: '50px', color: '#03AC13'}}> Thank you! Your question has been submitted successfully</h3>
+    </div>}
+  </div>
   );
-
 }
 
 export default AskQuestionPage

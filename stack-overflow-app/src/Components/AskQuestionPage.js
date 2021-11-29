@@ -5,12 +5,10 @@ const AskQuestionPage = () => {
 
   const [questionSubmitted, setQuestionSubmittedFlag] = useState(false);
   const [question, setQuestion] = useState(''); 
-  const [title, setTitle] = useState(''); 
   const [tags, setTags] = useState([]);
   const [content, setContent] = useState(''); 
   const [userId, setUserId] = useState(0);
 
-  const [questionList, setQuestionList] = useState([]);
   const [loginStatus, setLoginStatus] = useState(false);
 
   Axios.defaults.withCredentials = true;
@@ -27,21 +25,29 @@ const AskQuestionPage = () => {
   const ask = () => {
     if (loginStatus) {
       Axios.post("http://localhost:5001/ask", {
-        title: title,
+        title: question,
         content: content,
         user_id: userId,
-      }).then(() => {
-        setQuestionList([
-          ...questionList,
-          {
-            title: title,
-            content: content,
-            user_id: userId,
-          },
-        ]);
+      }).then((response) => {
+        const values = []; 
+        for (let tag of tags) {
+          values.push([response.data.insertId, tag]);
+        }
+        Axios.post("http://localhost:5001/tags", {
+          values: values
+        });
+      }).catch(err => {
+        console.error(err);
       });
       setQuestionSubmittedFlag(true);
     } 
+  };
+
+  const getTags = (e) => {
+    var arr = e.split(",").map(function(item) {
+      return item.trim();
+    });
+    setTags(arr);
   };
 
   const submit = () => {
@@ -56,7 +62,7 @@ const AskQuestionPage = () => {
     fontFamily: 'Teko',
 
   }
-  const title = {
+  const titleStyle = {
     fontSize: 24,
     textAlign: "left",
     paddingTop: "5px",
@@ -96,7 +102,7 @@ const AskQuestionPage = () => {
           <h2 style={Askquestion}> Ask a question </h2> 
         </div>
         <div style={questionBox}>
-          <h3 style={title}> Title </h3>
+          <h3 style={titleStyle}> Title </h3>
           <p> Insert a title that describes your question </p>
           <div>
             <form onSubmit={ask}>
@@ -109,7 +115,7 @@ const AskQuestionPage = () => {
                   onChange={(e) => {setQuestion(e.target.value);}}
                 />
               </div>
-              <h3 style={title}> Question </h3>
+              <h3 style={titleStyle}> Question </h3>
               <p> Write your question here. You can go into as much detail as you want </p>              
               <div>
                 <textarea 
@@ -122,6 +128,18 @@ const AskQuestionPage = () => {
                   onChange={(e) => {setContent(e.target.value);}}
                 />
               </div>
+              <h3 style={titleStyle}> Tags </h3>
+              <p> (Optional) Add tags that relate to your question </p>              
+              <div>
+                <input 
+                  style={inputStyle1} 
+                  type="text"
+                  border='none'
+                  outline='none'
+                  placeholder="E.g JavaScript, React, Python"
+                  onChange={(e) => {getTags(e.target.value);}}
+                />
+              </div>
               <div style={{ alignSelf: 'left', textAlign: 'right', bottom: '0px'}}>
                 <button style={buttonStyle1} onClick={submit}>Submit Question</button>
               </div>
@@ -132,9 +150,9 @@ const AskQuestionPage = () => {
     }
     {questionSubmitted && 
     <div style={{margin: "15%"}}> 
-      <h3 style={title}>Title</h3>
+      <h3 style={titleStyle}>Title</h3>
       <p style={{fontSize: 20}}> {question}</p>
-      <h3 style={title}>Question</h3>
+      <h3 style={titleStyle}>Question</h3>
       <p style={{fontSize: 20}}> {content}</p>
       <h3 style={{alignSelf: 'center', textAlign: 'center', paddingTop: '50px', color: '#03AC13'}}> Thank you! Your question has been submitted successfully</h3>
     </div>}

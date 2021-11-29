@@ -55,6 +55,7 @@ const answersDB = mysql.createConnection({
     database: 'answers',
 })
 
+// Get all questions
 app.get("/questions-get", (req, res) => {
     questionsDB.query("SELECT * FROM questions_info", (err, result) => {
       if (err) {
@@ -65,6 +66,7 @@ app.get("/questions-get", (req, res) => {
     });
   });
 
+  // Get a question by id to view
   app.get("/view/:id", (req, res) => {
     questionsDB.query("SELECT * FROM question_info WHERE id = ?", id, (err, result) => {
       if (err) {
@@ -75,9 +77,8 @@ app.get("/questions-get", (req, res) => {
     });
   });
 
-
+// Registering a new user
 app.post('/register', (req, res) => {
-
     const username = req.body.username;
     const password = req.body.password;
     
@@ -96,6 +97,7 @@ app.post('/register', (req, res) => {
     
 });
 
+// Logging in
 app.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -128,6 +130,7 @@ app.post('/login', (req, res) => {
     );
 });
 
+// Get login status
 app.get("/login", (req, res) => {
   if (req.session.user) {
     res.send({loggedIn: true, user: req.session.user}); 
@@ -136,11 +139,13 @@ app.get("/login", (req, res) => {
   }
 });
 
+// Logout a user and redirect to home page
 app.get('/logout',(req,res) => {
   req.session.destroy();
   res.redirect('/');
 });
 
+// Adds a question
 app.post('/ask', (req, res) => {
     const title = req.body.title;
     const content = req.body.content;
@@ -159,8 +164,25 @@ app.post('/ask', (req, res) => {
     );
 });
 
-app.post('/ans', (req, res) => {
+// Adds tags to a question
+app.post('/tags', (req, res) => {
+  const values = req.body.values;
 
+  questionsDB.query(
+    "INSERT INTO tags_info (question_id, tag) VALUES ?", 
+    [values], 
+    (err, result) => {
+        if(err) {
+          res.send({err: err});
+        } else {
+          res.send(result);
+        }
+    }
+  );
+});
+
+// Adds a question
+app.post('/ans', (req, res) => {
     const answer = req.body.answer;
     const question_id = req.body.question_id;
     const user_id = req.body.user_id;
@@ -178,6 +200,7 @@ app.post('/ans', (req, res) => {
     );
 });
 
+// Gets all answers
 app.get("/ansGet", (req, res) => {
   answersDB.query("SELECT * FROM answers_info", (err, result) => {
     if (err) {
@@ -207,6 +230,7 @@ app.get('/vote', (req, res) => {
   );
 });
 
+// Adding a vote while ensuring a user only votes once
 app.post('/vote', (req, res) => {
   const question_id = req.body.question_id;
   const answer_id = req.body.answer_id;

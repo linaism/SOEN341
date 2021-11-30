@@ -13,6 +13,18 @@ const NavigationBar = () => {
       });
     };
 
+    const BlueButton = {
+
+      backgroundColor: "#00868B",
+  color: "white",
+  fontFamily: 'Source Sans Pro,sans-serif',
+  borderRadius: "5px",
+  border:'0',
+  Width: "60px",
+  marginLeft:'10px'
+  };
+
+
     return (
         <div className="navigationBar">
             
@@ -29,7 +41,7 @@ const NavigationBar = () => {
                 <NavDropdown.Item href="http://localhost:3000/" onClick={logout}>Log out</NavDropdown.Item>
               </NavDropdown>
               <Nav.Link href="http://localhost:3000/ask-question">
-                <button>
+                <button style = {BlueButton}>
                   Ask Question
                 </button>
               </Nav.Link>

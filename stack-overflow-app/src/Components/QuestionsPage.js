@@ -21,11 +21,12 @@ const QuestionsPage = () => {
   };
 
   return (
-    <div>
+    <div>  <h1 style={{fontFamily:'Teko',fontSize:'30px', paddingTop:'40px', color:'#008B8B', paddingLeft:'40px'}}>Questions</h1>
+    <hr/> 
       {questionList.map((question) => {
           return (
             <div key={question.question_id}>
-              <h1 style={{fontFamily:'Teko',fontSize:'30px', paddingTop:'40px', paddingLeft:'40px'}}>Question</h1>
+              <p style={{fontFamily:'Teko',fontSize:'20px', paddingTop:'40px', color:'#008B8B', paddingLeft:'40px'}}>Question</p>
               <div >
               <p style={{fontSize:'15px', fontFamily:'sans-serif', paddingLeft:'60px'}}>Title: {question.title}</p>
               <Link  style={{textDecoration:'none'}} to={{
@@ -33,7 +34,7 @@ const QuestionsPage = () => {
                 state: { question: question }
               }}>
                 <div style={{display: 'flex', alignSelf: 'center', textAlign: 'center',  paddingLeft:'60px'}}>
-                  <Button>
+                  <Button style={{backgroundColor:'#008B8B', border:'none', borderRadius: '8px', color:'#FFFFFF'}}>
                     <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'5px'}}>View Question</h3>
                   </Button>
                 </div>

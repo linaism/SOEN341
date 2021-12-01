@@ -66,7 +66,18 @@ app.get("/questions-get", (req, res) => {
     });
   });
 
-// Get all tags
+  // Get a question by id to view
+  app.get("/view/:id", (req, res) => {
+    questionsDB.query("SELECT * FROM question_info WHERE id = ?", id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  });
+
+  // Get all tags
 app.get("/tags-get", (req, res) => {
   questionsDB.query("SELECT * FROM tags_info", (err, result) => {
     if (err) {
@@ -80,17 +91,6 @@ app.get("/tags-get", (req, res) => {
   // Get a tag by id to view
   app.get("/view/:tagid", (req, res) => {
     questionsDB.query("SELECT * FROM tags_info WHERE id = ?", id, (err, result) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(result);
-      }
-    });
-  });
-
-  // Get a question by id to view
-  app.get("/view/:id", (req, res) => {
-    questionsDB.query("SELECT * FROM question_info WHERE id = ?", id, (err, result) => {
       if (err) {
         console.log(err);
       } else {

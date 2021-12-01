@@ -44,10 +44,10 @@ const AskQuestionPage = () => {
   };
 
   const getTags = (e) => {
-    var arr = e.split(",").map(function(item) {
+    var tagArr = e.split(",").map(function(item) {
       return item.trim();
     });
-    setTags(arr);
+    setTags(tagArr);
   };
 
   const submit = () => {

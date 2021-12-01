@@ -42,11 +42,12 @@ const QuestionsPage = () => {
         <input type="text" placeholder="Search..." onChange={event => {search(event.target.value)}}></input>
       </div>
       {questionList.filter((question) => {
-        if (searchTitle == ""){
+        if (searchTitle === ""){
           return question
         } else if (question.title.toLowerCase().includes(searchTitle.toLowerCase())){
           return question
         } 
+        return question;
       }).map((question) => {
           return (
             <div key={question.question_id}>             
@@ -55,15 +56,16 @@ const QuestionsPage = () => {
               <p style={{fontSize:'15px', fontFamily:'sans-serif', paddingLeft:'60px'}}>Title: {question.title}</p>
 
               {tagList.filter((tagArr) => {
-                  if (searchTag == ""){
-                    if (question.question_id == tagArr.question_id){
+                  if (searchTag === ""){
+                    if (question.question_id === tagArr.question_id){
                       return tagList
                     }
                   }else if (tagArr.tag.toLowerCase().includes(searchTag.toLowerCase())){
-                    if (question.question_id == tagArr.question_id){
+                    if (question.question_id === tagArr.question_id){
                       return tagList
                     }
                   }
+                  return tagList;
               }).map((tagArr) => {
                 return (<p style={{fontSize:'15px', fontFamily:'sans-serif', paddingLeft:'60px'}}>Tag: {tagArr.tag}</p>)
               })}

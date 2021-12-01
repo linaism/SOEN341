@@ -157,45 +157,73 @@ const ViewQuestionPage = () => {
     };
 
     const upVote= {
-
         backgroundColor: "#04AA6D",
-    color: "white",
-    fontFamily: 'Source Sans Pro,sans-serif',
-    borderRadius: "5px",
-    border:'0',
-    Width: "60px",
-    marginLeft:'10px'
+        color: "white",
+        fontFamily: 'Source Sans Pro,sans-serif',
+        borderRadius: "5px",
+        border:'0',
+        Width: "60px",
+        marginLeft:'10px'
     };
     const downVote= {
-
         backgroundColor: "#E55B13",
-    color: "white",
-    fontFamily: 'Source Sans Pro,sans-serif',
-    borderRadius: "5px",
-    border:'0',
-    Width: "60px",
-    marginLeft:'10px'
+        color: "white",
+        fontFamily: 'Source Sans Pro,sans-serif',
+        borderRadius: "5px",
+        border:'0',
+        Width: "60px",
+        marginLeft:'10px'
     };
     const BlueButton = {
-
         backgroundColor: "#00868B",
-    color: "white",
-    fontFamily: 'Source Sans Pro,sans-serif',
-    borderRadius: "5px",
-    border:'0',
-    Width: "60px",
-    marginLeft:'10px'
+        color: "white",
+        fontFamily: 'Source Sans Pro,sans-serif',
+        borderRadius: "5px",
+        border:'0',
+        Width: "60px",
+        marginLeft:'10px'
     };
 
-    const titleText = {fontFamily:'Teko',fontSize:'30px', paddingTop:'40px', color:'#008B8B', paddingLeft:'40px'};
-    const blueContainer = {backgroundColor:'#CCDCFD',marginLeft:'30px', marginRight:'50px', borderRadius:'5px'};
+    const titleText = {
+        fontFamily:'Teko',
+        fontSize:'30px', 
+        paddingTop:'40px', 
+        color:'#008B8B', 
+        paddingLeft:'40px'
+    };
+    
+    const blueContainer = {
+        backgroundColor:'#CCDCFD',
+        borderRadius:'5px'
+    };
+
+    const paddingAttribute = {
+        paddingTop: '10px',
+        paddingRight: '20px',
+        paddingBottom: '30px',
+        paddingLeft: '40px',   
+    };
+
+    const marginAttribute = {
+
+        marginTop: '10px',
+        marginRight: '20px',
+        marginBottom: '30px',
+        marginLeft: '40px',   
+   };
+
+   const lightBlueContainer = {
+        backgroundColor:'#E6E6FA',
+        borderRadius:'5px',
+        width:'50%'
+   };
 
     return (
         <div>
             <h1 style={titleText}>View Question</h1>
-            <div style={blueContainer}>
-                <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'15px'}}> <b>Title: {state.question.title} </b> </h3>
-                <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'5px', paddingLeft:'15px'}}> Content: {state.question.content} </h3>
+            <div style={Object.assign({}, marginAttribute, blueContainer)}>
+                <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'15px',fontWeight:'bold'}}> {state.question.title}  </h3>
+                <h3 style={{fontSize:'15px', fontFamily:'sans-serif', paddingTop:'5px', paddingLeft:'15px'}}> {state.question.content} </h3>
                 <p style={{fontSize:'12px', fontFamily:'sans-serif', paddingTop:'20px', paddingBottom:'10px', paddingLeft:'5px'}}>Submitted by: {questionUsername}</p>
             </div>
 
@@ -204,22 +232,22 @@ const ViewQuestionPage = () => {
                     <div className="answer">
                         <div style={{fontSize:'10px', fontFamily:'sans-serif'}}>
                             <h1 style={titleText}>Best Answer</h1>
-                            <p style = {blueContainer}><h3 style={{fontSize:'15px', paddingLeft:'15px', paddingTop:'10px',paddingBottom:'20px', paddingRight:'15px'}}> Answer: {bestAnswer}</h3> </p>
+                            <p style={Object.assign({}, marginAttribute, blueContainer)}><h3 style={{fontSize:'15px', paddingLeft:'15px', paddingTop:'10px',paddingBottom:'20px', paddingRight:'15px'}}> Answer: {bestAnswer}</h3> </p>
                         </div>
                     </div>
                 }
                 <div className="answers">
                 <h1 style={titleText}>Answers</h1>
-                  <div style={blueContainer}>  {answerList.map((val, key) => {
+                  <div style={Object.assign({}, marginAttribute, blueContainer)}>  {answerList.map((val, key) => {
                         return ((val.question_id === state.question.question_id) &&
                         <div className="answer" key={val.answer_id}>
                             <div style={{fontSize:'10px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'10px'}}>
-                               <p style={{backgroundColor:'#E6E6FA', paddingTop:'10px', borderRadius:'5px', width:'50%', paddingBottom:'5px'}}> <h3 style={{fontSize:'15px', paddingBottom:'30px',paddingLeft: "10px"}}>Answer: {val.answer}</h3>
+                               <div style={Object.assign({}, paddingAttribute, lightBlueContainer)} > <h3 style={{fontSize:'15px', paddingBottom:'30px',paddingLeft: "10px"}}>Answer: {val.answer}</h3>
                                 <button style= {BlueButton} onClick={() => {best(val.answer_id, val.answer);}}>Best Answer</button>
                                 <button style={upVote} onClick={() => {incrementVoteCount(val.answer_id, val.vote_count);}}>Upvote</button>
-                                <text style={{marginLeft:'10px', fontSize:'15px'}}><b>{val.vote_count}</b></text>
+                                <text style={{marginLeft:'10px', fontSize:'15px',fontWeight:'bold'}}>{val.vote_count}</text>
                                 <button style={downVote} onClick={() => {decrementVoteCount(val.answer_id, val.vote_count);}}>Downvote</button>
-                                </p>
+                                </div>
                             </div>
                         </div>
                         );} 

@@ -325,6 +325,16 @@ app.get("/user/:id", (req, res) => {
 
 });
 
+app.get("/search-is-accepted", (req, res) => {
+  questionsDB.query("SELECT * FROM questions_info WHERE best_answer_id IS NOT NULL", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
+
 app.listen(5001, () => {
     console.log("running server");
 });

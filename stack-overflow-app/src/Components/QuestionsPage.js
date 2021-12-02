@@ -23,28 +23,22 @@ const QuestionsPage = () => {
     });
   };
 
-  const setSearch = (e) => {
-    var isAccepted = "\"is accepted\"";
-    if (e.toLowerCase().includes(isAccepted.toLowerCase())) {
-      searchIsAccepted();
-    }
-    setSearchTriggered(true);
-  }
-
-  const searchIsAccepted = () => {
-    Axios.get("http://localhost:5001/search-is-accepted").then((response) => {
-      setSearchResults(response.data);
-    });
-  }
-
   const search = () => {
-    setSearch(searchValue);
+    Axios.get("http://localhost:5001/search", {
+      params: {
+          searchStr: searchValue,
+      }
+    }).then((response) => {
+      setSearchResults(response);
+      setSearchTriggered(true);
+    }); 
   }
+
 
   return (
     <div>
       <div style={{padding:'50px', paddingBottom:'0px'}}>
-        <input type="text" placeholder="Search..." onChange={event => {setSearchValue(event.target.value)}}></input>
+        <input style={{width:'300px'}} type="text" placeholder="Keyword, [Tag], &quot;isAccepted&quot;" onChange={event => {setSearchValue(event.target.value)}}></input>
         <button style={{marginLeft: 15}} onClick={search}>Enter</button>
       </div>
       {searchTriggered && searchResults.map((question) => {

@@ -41,7 +41,9 @@ const loginDB = mysql.createConnection({
     database: 'loginsystem',
 })
 
+
 const questionsDB = mysql.createConnection({
+    multipleStatements: true,
     user: 'root',
     host: 'localhost',
     password: 'password',
@@ -324,6 +326,50 @@ app.get("/user/:id", (req, res) => {
   );
 
 });
+
+
+
+app.get("/search", (req, res) => {
+  const searchStr = req.query.searchStr;
+  var keywordStr;
+  var tag;
+  var isAccepted = false;
+
+  var searchArr = searchStr.split(",").map(function(item) {
+    return item;
+  });
+
+  for(let word of searchArr)
+  {
+    if(word.includes("[") && word.includes("]"))
+    {
+      word.removeCharAt(0);
+      word.removeCharAt(word.length()-1);
+      tag = word;
+    }else if(word.toLowerCase() == "\"isaccepted\"")
+    {
+      word.removeCharAt(0);
+      word.removeCharAt(word.length()-1);
+      isAccepted = true;
+    }else
+      keyword = word;
+  }
+
+  if(keywordStr != NULL && tag != NULL && isAccepted)
+  {
+    questionsDB.query("SELECT q.* FROM question_info q, tags_info t WHERE q.title=%?% AND q.question_id = t.question_id AND t.tag=? AND q.best_answer_id IS NOT NULL", 
+    [keyword, tag], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  }
+
+
+});
+
 
 app.get("/search-is-accepted", (req, res) => {
   questionsDB.query("SELECT * FROM questions_info WHERE best_answer_id IS NOT NULL", (err, result) => {

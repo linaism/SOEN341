@@ -47,7 +47,7 @@ const QuestionsPage = () => {
         } else if (question.title.toLowerCase().includes(searchTitle.toLowerCase())){
           return question
         } 
-        return question;
+        return null;
       }).map((question) => {
           return (
             <div key={question.question_id}>             
@@ -65,7 +65,7 @@ const QuestionsPage = () => {
                       return tagList
                     }
                   }
-                  return tagList;
+                  return null;
               }).map((tagArr) => {
                 return (<p style={{fontSize:'15px', fontFamily:'sans-serif', paddingLeft:'60px'}}>Tag: {tagArr.tag}</p>)
               })}

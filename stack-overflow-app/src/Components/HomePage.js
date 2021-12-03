@@ -10,6 +10,7 @@ const HomePage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
   
+    const [registrationStatus, setRegistationStatus] = useState('');
     const [loginStatus, setLoginStatus] = useState('');
   
     Axios.defaults.withCredentials = true;
@@ -19,7 +20,14 @@ const HomePage = () => {
         username: usernameReg,
         password: passwordReg,
       }).then((response) => {
-        console.log(response); 
+        if(response.data.message)
+        {
+          setRegistationStatus(response.data.message);
+        }
+        else
+        {
+          setRegistationStatus(response.data[0].username);
+        }
       });
     };
   
@@ -75,7 +83,7 @@ const HomePage = () => {
           </div>
           </div>
         </div>
-  
+        <h1> {registrationStatus} </h1>
   
   
   

@@ -57,6 +57,7 @@ const HomePage = () => {
         <div style={{ margin: "20px" }}>
           <label style={{ marginRight: "10px" }}>Username</label>
           <input
+            title="regUsername"
             placeholder="Username..."
             type="text"
             onChange={(e) => {

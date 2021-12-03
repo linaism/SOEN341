@@ -29,7 +29,8 @@ const QuestionsPage = () => {
           searchStr: searchValue,
       }
     }).then((response) => {
-      setSearchResults(response);
+      console.log(response);
+      setSearchResults(response.data);
       setSearchTriggered(true);
     }); 
   }

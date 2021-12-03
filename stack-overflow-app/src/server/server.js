@@ -327,13 +327,50 @@ app.get("/user/:id", (req, res) => {
 
 });
 
+// app.get("/search", (req, res) => {
+//   const searchStr = req.query.searchStr;
+//   var keywordStr = "";
+//   var tag = "";
+//   var isAccepted = false;
 
+//   var searchArr = searchStr.split(",").map(function(item) {
+//     return item;
+//   });
+
+//   for(let word of searchArr)
+//   {
+//     if(word.includes("[") && word.includes("]"))
+//     {
+//       word.replace('[', '');
+//       word.replace(']', '');
+//       tag = word;
+//       console.log(word);
+//     }else if(word.toLowerCase() == "\"isaccepted\"")
+//     {
+//       isAccepted = true;
+//     }else
+//       keyword = word;
+//   }
+
+//   if(keywordStr != "" && tag != "" && isAccepted)
+//   {
+//     console.log("query begins");
+//     questionsDB.query("SELECT questions_info.* FROM questions_info, tags_info WHERE questions_info.title=%?% AND questions_info.question_id = tags_info.question_id AND tags_info.tag=? AND questions_info.best_answer_id IS NOT NULL", 
+//     [keyword, tag], (err, result) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         res.send(result);
+//       }
+//     });
+//   }
+// });
 
 app.get("/search", (req, res) => {
   const searchStr = req.query.searchStr;
-  var keywordStr;
-  var tag;
-  var isAccepted = false;
+  var keywordStr = "";
+  var tag = "";
+  var isAccepted;
 
   var searchArr = searchStr.split(",").map(function(item) {
     return item;
@@ -341,33 +378,87 @@ app.get("/search", (req, res) => {
 
   for(let word of searchArr)
   {
-    if(word.includes("[") && word.includes("]"))
+    if(word.includes('[') && word.includes(']'))
     {
-      word.removeCharAt(0);
-      word.removeCharAt(word.length()-1);
-      tag = word;
+      tag = word.replace('[', '');
+      tag = tag.replace(']', '');
     }else if(word.toLowerCase() == "\"isaccepted\"")
     {
-      word.removeCharAt(0);
-      word.removeCharAt(word.length()-1);
       isAccepted = true;
-    }else
-      keyword = word;
+    }else {
+      keywordStr = word;
+    }
   }
 
-  if(keywordStr != NULL && tag != NULL && isAccepted)
+  if(keywordStr.length != 0 && tag.length != 0 && isAccepted)
   {
-    questionsDB.query("SELECT q.* FROM question_info q, tags_info t WHERE q.title=%?% AND q.question_id = t.question_id AND t.tag=? AND q.best_answer_id IS NOT NULL", 
-    [keyword, tag], (err, result) => {
+    questionsDB.query("SELECT q.* FROM questions_info q, tags_info t WHERE q.title LIKE ? AND q.question_id = t.question_id AND t.tag=? AND q.best_answer_id IS NOT NULL", 
+    ['%' + keywordStr + '%', tag], (err, result) => {
       if (err) {
         console.log(err);
       } else {
         res.send(result);
       }
     });
+  } else if (keywordStr.length != 0 && tag.length != 0) {
+    questionsDB.query("SELECT q.* FROM questions_info q, tags_info t WHERE q.title LIKE ? AND q.question_id = t.question_id AND t.tag=?", 
+    ['%' + keywordStr + '%', tag], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  } else if (tag.length != 0 && isAccepted) {
+    questionsDB.query("SELECT q.* FROM questions_info q, tags_info t WHERE q.question_id = t.question_id AND t.tag=? AND q.best_answer_id IS NOT NULL", 
+    tag, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  } else if (keywordStr.length != 0 && isAccepted) {
+    questionsDB.query("SELECT * FROM questions_info WHERE title LIKE ? AND best_answer_id IS NOT NULL", 
+    ['%' + keywordStr + '%'], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+
+  } else if (keywordStr.length != 0) {
+    questionsDB.query("SELECT * FROM questions_info WHERE title LIKE ?", 
+    ['%' + keywordStr + '%'], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  } else if (tag.length != 0) {
+    questionsDB.query("SELECT q.* FROM questions_info q, tags_info t WHERE q.question_id = t.question_id AND t.tag=?", 
+    [tag], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+        console.log(result);
+      }
+    });
+
+  } else if (isAccepted) {
+    questionsDB.query("SELECT * FROM questions_info WHERE best_answer_id IS NOT NULL",
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+        console.log(result);
+      }
+    });
   }
-
-
 });
 
 

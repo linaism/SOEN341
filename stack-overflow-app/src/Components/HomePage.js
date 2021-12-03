@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import '../Style.css';
+import './Login.css';
 import Axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.css'
 

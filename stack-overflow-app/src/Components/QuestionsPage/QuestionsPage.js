@@ -5,16 +5,14 @@ import Axios from "axios";
 
 const QuestionsPage = () => {
   const [questionList, setQuestionList] = useState([]);
-  const [tagList, setTagList] = useState([]);
-  const [searchTitle, setSearchTitle] = useState("");
-  const [searchTag, setSearchTag] = useState("");
+  const [searchTriggered, setSearchTriggered] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   useEffect(() => {
     getQuestions();
-    getTags();
     return () => {
       setQuestionList([]);
-      setTagList([]);
     };
   }, []);
 
@@ -23,40 +21,36 @@ const QuestionsPage = () => {
       setQuestionList(response.data);
     });
   };
-  const getTags = () => {
-    Axios.get("http://localhost:5001/tags-get").then((response) => {
-      setTagList(response.data);
-    });
-  };
 
-  const search = (e) => {
-    setSearchTitle(e);
-    setSearchTag(e);
+  const search = () => {
+    Axios.get("http://localhost:5001/search", {
+      params: {
+        searchStr: searchValue,
+      },
+    }).then((response) => {
+      console.log(response);
+      setSearchResults(response.data);
+      setSearchTriggered(true);
+    });
   };
 
   return (
     <div>
       <div style={{ padding: "50px", paddingBottom: "0px" }}>
         <input
+          style={{ width: "300px" }}
           type="text"
-          placeholder="Search..."
+          placeholder='Keyword, [Tag], "isAccepted"'
           onChange={(event) => {
-            search(event.target.value);
+            setSearchValue(event.target.value);
           }}
         ></input>
+        <button style={{ marginLeft: 15 }} onClick={search}>
+          Enter
+        </button>
       </div>
-      {questionList
-        .filter((question) => {
-          if (searchTitle === "") {
-            return question;
-          } else if (
-            question.title.toLowerCase().includes(searchTitle.toLowerCase())
-          ) {
-            return question;
-          }
-          return null;
-        })
-        .map((question) => {
+      {searchTriggered &&
+        searchResults.map((question) => {
           return (
             <div key={question.question_id}>
               <h1
@@ -79,36 +73,62 @@ const QuestionsPage = () => {
                 >
                   Title: {question.title}
                 </p>
-
-                {tagList
-                  .filter((tagArr) => {
-                    if (searchTag === "") {
-                      if (question.question_id === tagArr.question_id) {
-                        return tagList;
-                      }
-                    } else if (
-                      tagArr.tag.toLowerCase().includes(searchTag.toLowerCase())
-                    ) {
-                      if (question.question_id === tagArr.question_id) {
-                        return tagList;
-                      }
-                    }
-                    return null;
-                  })
-                  .map((tagArr) => {
-                    return (
-                      <p
+                <Link
+                  style={{ textDecoration: "none" }}
+                  to={{
+                    pathname: `/view-question/${question.question_id}`,
+                    state: { question: question },
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignSelf: "center",
+                      textAlign: "center",
+                      paddingLeft: "60px",
+                    }}
+                  >
+                    <Button>
+                      <h3
                         style={{
                           fontSize: "15px",
                           fontFamily: "sans-serif",
-                          paddingLeft: "60px",
+                          paddingTop: "5px",
                         }}
                       >
-                        Tag: {tagArr.tag}
-                      </p>
-                    );
-                  })}
-
+                        View Question
+                      </h3>
+                    </Button>
+                  </div>
+                </Link>
+              </div>
+            </div>
+          );
+        })}
+      {!searchTriggered &&
+        questionList.map((question) => {
+          return (
+            <div key={question.question_id}>
+              <h1
+                style={{
+                  fontFamily: "Teko",
+                  fontSize: "30px",
+                  paddingTop: "40px",
+                  paddingLeft: "40px",
+                }}
+              >
+                Question
+              </h1>
+              <div>
+                <p
+                  style={{
+                    fontSize: "15px",
+                    fontFamily: "sans-serif",
+                    paddingLeft: "60px",
+                  }}
+                >
+                  Title: {question.title}
+                </p>
                 <Link
                   style={{ textDecoration: "none" }}
                   to={{

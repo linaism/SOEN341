@@ -160,7 +160,11 @@ const AskQuestionPage = () => {
                     bottom: "0px",
                   }}
                 >
-                  <button style={buttonStyle1} onClick={submit} title="submitButton">
+                  <button
+                    style={buttonStyle1}
+                    onClick={submit}
+                    title="submitButton"
+                  >
                     Submit Question
                   </button>
                 </div>

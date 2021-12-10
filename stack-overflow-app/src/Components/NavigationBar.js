@@ -1,57 +1,54 @@
-import {Container, Nav, Navbar, NavDropdown } from 'react-bootstrap';
-import { withRouter } from 'react-router-dom';
-import Axios from 'axios';
-import React from 'react'
-import './Login.css';
-import 'bootstrap/dist/css/bootstrap.css';
+import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import { withRouter } from "react-router-dom";
+import Axios from "axios";
+import React from "react";
+import "./Style.css";
+import "bootstrap/dist/css/bootstrap.css";
 
 const NavigationBar = () => {
-
-    const logout = () => {
-      Axios.get("http://localhost:5001/logout").then((response) => {
-          response.data.loggedIn = false;
-      });
-    };
-
-    const BlueButton = {
-
-      backgroundColor: "#00868B",
-  color: "white",
-  fontFamily: 'Source Sans Pro,sans-serif',
-  borderRadius: "5px",
-  border:'0',
-  Width: "60px",
-  marginLeft:'10px'
+  const logout = () => {
+    Axios.get("http://localhost:5001/logout").then((response) => {
+      response.data.loggedIn = false;
+    });
   };
 
-
-    return (
-        <div className="navigationBar">
-            
-        <Navbar bg="light" sticky="top" >
+  return (
+    <div className="navigationBar">
+      <Navbar bg="light" sticky="top">
         <Container>
-          <Navbar.Brand style={{fontFamily:'Teko',fontSize:'30px'}}>Stacked Over</Navbar.Brand>
+          <Navbar.Brand style={{ fontFamily: "Teko", fontSize: "30px" }}>
+            Stacked Over
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto" style={{fontSize:'15px', fontFamily:'sans-serif'}}>
+            <Nav
+              className="me-auto"
+              style={{ fontSize: "15px", fontFamily: "sans-serif" }}
+            >
               <Nav.Link href="http://localhost:3000/">Home</Nav.Link>
-              <Nav.Link href="http://localhost:3000/questions">Questions</Nav.Link>
+              <Nav.Link href="http://localhost:3000/questions">
+                Questions
+              </Nav.Link>
               <NavDropdown title="Profile">
-                <NavDropdown.Item href="http://localhost:3000/">Sign Up/Login</NavDropdown.Item>
-                <NavDropdown.Item href="http://localhost:3000/" onClick={logout}>Log out</NavDropdown.Item>
+                <NavDropdown.Item href="http://localhost:3000/">
+                  Sign Up/Login
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  href="http://localhost:3000/"
+                  onClick={logout}
+                >
+                  Log out
+                </NavDropdown.Item>
               </NavDropdown>
               <Nav.Link href="http://localhost:3000/ask-question">
-                <button style = {BlueButton}>
-                  Ask Question
-                </button>
+                <button>Ask Question</button>
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Container>
-        </Navbar>
+      </Navbar>
+    </div>
+  );
+};
 
-        </div>
-    )
-}
-
-export default withRouter(NavigationBar)
+export default withRouter(NavigationBar);

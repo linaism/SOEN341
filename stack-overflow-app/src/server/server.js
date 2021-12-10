@@ -41,7 +41,9 @@ const loginDB = mysql.createConnection({
     database: 'loginsystem',
 })
 
+
 const questionsDB = mysql.createConnection({
+    multipleStatements: true,
     user: 'root',
     host: 'localhost',
     password: 'password',
@@ -55,6 +57,7 @@ const answersDB = mysql.createConnection({
     database: 'answers',
 })
 
+// Get all questions
 app.get("/questions-get", (req, res) => {
     questionsDB.query("SELECT * FROM questions_info", (err, result) => {
       if (err) {
@@ -65,6 +68,7 @@ app.get("/questions-get", (req, res) => {
     });
   });
 
+  // Get a question by id to view
   app.get("/view/:id", (req, res) => {
     questionsDB.query("SELECT * FROM question_info WHERE id = ?", id, (err, result) => {
       if (err) {
@@ -75,9 +79,30 @@ app.get("/questions-get", (req, res) => {
     });
   });
 
+  // Get all tags
+app.get("/tags-get", (req, res) => {
+  questionsDB.query("SELECT * FROM tags_info", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
+});
 
+  // Get a tag by id to view
+  app.get("/view/:tagid", (req, res) => {
+    questionsDB.query("SELECT * FROM tags_info WHERE id = ?", id, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  });
+
+// Registering a new user
 app.post('/register', (req, res) => {
-
     const username = req.body.username;
     const password = req.body.password;
     
@@ -89,13 +114,17 @@ app.post('/register', (req, res) => {
         "INSERT INTO logininfo (username, password) VALUES (?,?)", 
         [username, hash], 
         (err, result) => {
-            console.log(err);
+          if (err.code === "ER_DUP_ENTRY") {
+            res.send({ message: "Username already exists"});
+          }
+          console.log(err);
         }
       );
     })
     
 });
 
+// Logging in
 app.post('/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
@@ -128,6 +157,7 @@ app.post('/login', (req, res) => {
     );
 });
 
+// Get login status
 app.get("/login", (req, res) => {
   if (req.session.user) {
     res.send({loggedIn: true, user: req.session.user}); 
@@ -136,11 +166,13 @@ app.get("/login", (req, res) => {
   }
 });
 
+// Logout a user and redirect to home page
 app.get('/logout',(req,res) => {
   req.session.destroy();
   res.redirect('/');
 });
 
+// Adds a question
 app.post('/ask', (req, res) => {
     const title = req.body.title;
     const content = req.body.content;
@@ -159,8 +191,25 @@ app.post('/ask', (req, res) => {
     );
 });
 
-app.post('/ans', (req, res) => {
+// Adds tags to a question
+app.post('/tags', (req, res) => {
+  const values = req.body.values;
 
+  questionsDB.query(
+    "INSERT INTO tags_info (question_id, tag) VALUES ?", 
+    [values], 
+    (err, result) => {
+        if(err) {
+          res.send({err: err});
+        } else {
+          res.send(result);
+        }
+    }
+  );
+});
+
+// Adds a question
+app.post('/ans', (req, res) => {
     const answer = req.body.answer;
     const question_id = req.body.question_id;
     const user_id = req.body.user_id;
@@ -178,6 +227,7 @@ app.post('/ans', (req, res) => {
     );
 });
 
+// Gets all answers
 app.get("/ansGet", (req, res) => {
   answersDB.query("SELECT * FROM answers_info", (err, result) => {
     if (err) {
@@ -207,6 +257,7 @@ app.get('/vote', (req, res) => {
   );
 });
 
+// Adding a vote while ensuring a user only votes once
 app.post('/vote', (req, res) => {
   const question_id = req.body.question_id;
   const answer_id = req.body.answer_id;
@@ -225,90 +276,6 @@ app.post('/vote', (req, res) => {
     }
   )
 });
-
-// Too long and potentially useless, delet
-// Add vote information in voting database for given answer and question id
-// app.put('/vote', (req, res) => {
-//   const answer_id = req.body.answer_id;
-//   const question_id = req.body.question_id;
-//   const user_id = req.body.user_id;
-//   const type = req.body.type;
-//   let vote_count = 0;
-//   if (req.body.vote_count) {vote_count = req.body.vote_count;}
-
-//   answersDB.query(
-//     "SELECT * FROM votes_info WHERE answer_id = ? AND question_id = ? AND user_id = ?",
-//     [answer_id, question_id, user_id],
-//     (err, result) => {
-//       if (err) {
-//         console.log(err);
-//       } 
-//       if (!result.length) { // If there is no vote entry for this user in the database 
-//         answersDB.query( // Add new vote entry 
-//           "INSERT INTO votes_info (answer_id, question_id, user_id, type) VALUES (?, ?, ?, ?)",
-//           [answer_id, question_id, user_id, type], 
-//           (err, res) => {
-//               if(err) {
-//                 console.log(err);
-//               } else {
-//                 res.send(res);
-//               }
-//           }
-//         );
-//         answersDB.query( // Update vote count in answers_info database ******DOUBLE CHECK******
-//           "UPDATE answers_info SET vote_count = ? WHERE answer_id = ?",
-//           [vote_count, answer_id],
-//           (err, res) => {
-//             if (err) {
-//               console.log(err);
-//             } else {
-//               res.send(res);
-//             }
-//           }
-//         );
-//       } else {
-//         if (result.type != type)
-//         answersDB.query(
-//           "UPDATE votes_info SET vote_count = ? WHERE answer_id = ?"
-//         )
-//       }
-//     });
-
-//   answersDB.query(
-//       "INSERT INTO votes_info (answer_id, question_id, user_id, type) VALUES (?, ?, ?, ?)", 
-//       [answer_id, question_id, user_id, type], 
-//       (err, result) => {
-//           if(err) {
-//             console.log(err);
-//           } else {
-//             res.send(result);
-//           }
-//       }
-//   );
-// });
-
-// Review
-// Update number of votes in voting database
-// app.put("/vote", (req, res) => {
-  // const answer_id = req.body.answer_id;
-  // const question_id = req.body.question_id;
-  // const user_id = req.body.user_id;
-  // const type = req.body.type;
-  // let vote_count = 0;
-  // if (req.body.vote_count) {vote_count = req.body.vote_count;}
-
-  // questionsDB.query(
-  //   "UPDATE answer_votes SET type = ? WHERE answer_id = ?",
-  //   [vote_count, answer_id],
-  //   (err, result) => {
-  //     if (err) {
-  //       console.log(err);
-  //     } else {
-  //       res.send(result);
-  //     }
-  //   }
-  // );
-// });
 
 // Update number of votes in answer database
 app.put("/update-vote", (req, res) => {
@@ -361,6 +328,151 @@ app.get("/user/:id", (req, res) => {
     }
   );
 
+});
+
+// app.get("/search", (req, res) => {
+//   const searchStr = req.query.searchStr;
+//   var keywordStr = "";
+//   var tag = "";
+//   var isAccepted = false;
+
+//   var searchArr = searchStr.split(",").map(function(item) {
+//     return item;
+//   });
+
+//   for(let word of searchArr)
+//   {
+//     if(word.includes("[") && word.includes("]"))
+//     {
+//       word.replace('[', '');
+//       word.replace(']', '');
+//       tag = word;
+//       console.log(word);
+//     }else if(word.toLowerCase() == "\"isaccepted\"")
+//     {
+//       isAccepted = true;
+//     }else
+//       keyword = word;
+//   }
+
+//   if(keywordStr != "" && tag != "" && isAccepted)
+//   {
+//     console.log("query begins");
+//     questionsDB.query("SELECT questions_info.* FROM questions_info, tags_info WHERE questions_info.title=%?% AND questions_info.question_id = tags_info.question_id AND tags_info.tag=? AND questions_info.best_answer_id IS NOT NULL", 
+//     [keyword, tag], (err, result) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         res.send(result);
+//       }
+//     });
+//   }
+// });
+
+app.get("/search", (req, res) => {
+  const searchStr = req.query.searchStr;
+  var keywordStr = "";
+  var tag = "";
+  var isAccepted;
+
+  var searchArr = searchStr.split(",").map(function(item) {
+    return item;
+  });
+
+  for(let word of searchArr)
+  {
+    if(word.includes('[') && word.includes(']'))
+    {
+      tag = word.replace('[', '');
+      tag = tag.replace(']', '');
+    }else if(word.toLowerCase() == "\"isaccepted\"")
+    {
+      isAccepted = true;
+    }else {
+      keywordStr = word;
+    }
+  }
+
+  if(keywordStr.length != 0 && tag.length != 0 && isAccepted)
+  {
+    questionsDB.query("SELECT q.* FROM questions_info q, tags_info t WHERE q.title LIKE ? AND q.question_id = t.question_id AND t.tag=? AND q.best_answer_id IS NOT NULL", 
+    ['%' + keywordStr + '%', tag], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  } else if (keywordStr.length != 0 && tag.length != 0) {
+    questionsDB.query("SELECT q.* FROM questions_info q, tags_info t WHERE q.title LIKE ? AND q.question_id = t.question_id AND t.tag=?", 
+    ['%' + keywordStr + '%', tag], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  } else if (tag.length != 0 && isAccepted) {
+    questionsDB.query("SELECT q.* FROM questions_info q, tags_info t WHERE q.question_id = t.question_id AND t.tag=? AND q.best_answer_id IS NOT NULL", 
+    tag, (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  } else if (keywordStr.length != 0 && isAccepted) {
+    questionsDB.query("SELECT * FROM questions_info WHERE title LIKE ? AND best_answer_id IS NOT NULL", 
+    ['%' + keywordStr + '%'], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+
+  } else if (keywordStr.length != 0) {
+    questionsDB.query("SELECT * FROM questions_info WHERE title LIKE ?", 
+    ['%' + keywordStr + '%'], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    });
+  } else if (tag.length != 0) {
+    questionsDB.query("SELECT q.* FROM questions_info q, tags_info t WHERE q.question_id = t.question_id AND t.tag=?", 
+    [tag], (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+        console.log(result);
+      }
+    });
+
+  } else if (isAccepted) {
+    questionsDB.query("SELECT * FROM questions_info WHERE best_answer_id IS NOT NULL",
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+        console.log(result);
+      }
+    });
+  }
+});
+
+
+app.get("/search-is-accepted", (req, res) => {
+  questionsDB.query("SELECT * FROM questions_info WHERE best_answer_id IS NOT NULL", (err, result) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(result);
+    }
+  });
 });
 
 app.listen(5001, () => {

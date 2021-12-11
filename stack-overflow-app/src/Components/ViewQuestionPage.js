@@ -187,9 +187,11 @@ const ViewQuestionPage = () => {
     const titleText = {
         fontFamily:'Teko',
         fontSize:'30px', 
-        paddingTop:'40px', 
+        paddingTop:'20px', 
         color:'#008B8B', 
-        paddingLeft:'40px'
+        paddingLeft:'20px',
+        paddingBottom:'20px',
+        paddingRight:'20px'
     };
     
     const blueContainer = {
@@ -197,25 +199,20 @@ const ViewQuestionPage = () => {
         borderRadius:'5px'
     };
 
-    const paddingAttribute = {
-        paddingTop: '10px',
-        paddingRight: '20px',
-        paddingBottom: '30px',
-        paddingLeft: '40px',   
-    };
-
+    
     const marginAttribute = {
 
-        marginTop: '10px',
+        marginTop: '20px',
         marginRight: '20px',
-        marginBottom: '30px',
-        marginLeft: '40px',   
+        marginBottom: '20px',
+        marginLeft: '20px',   
    };
 
    const lightBlueContainer = {
         backgroundColor:'#E6E6FA',
         borderRadius:'5px',
-        width:'50%'
+        marginRight: '10px' 
+       
    };
 
     return (
@@ -238,11 +235,11 @@ const ViewQuestionPage = () => {
                 }
                 <div className="answers">
                 <h1 style={titleText}>Answers</h1>
-                  <div style={Object.assign({}, marginAttribute, blueContainer)}>  {answerList.map((val, key) => {
+                  <div style={ Object.assign({}, marginAttribute, blueContainer)}>  {answerList.map((val, key) => {
                         return ((val.question_id === state.question.question_id) &&
                         <div className="answer" key={val.answer_id}>
                             <div style={{fontSize:'10px', fontFamily:'sans-serif', paddingTop:'10px', paddingLeft:'10px'}}>
-                               <div style={Object.assign({}, paddingAttribute, lightBlueContainer)} > <h3 style={{fontSize:'15px', paddingBottom:'30px',paddingLeft: "10px"}}>Answer: {val.answer}</h3>
+                               <div style={lightBlueContainer} > <h3 style={{fontSize:'15px', paddingBottom:'30px',paddingLeft: "10px"}}>Answer: {val.answer}</h3>
                                 <button style= {BlueButton} onClick={() => {best(val.answer_id, val.answer);}}>Best Answer</button>
                                 <button style={upVote} onClick={() => {incrementVoteCount(val.answer_id, val.vote_count);}}>Upvote</button>
                                 <text style={{marginLeft:'10px', fontSize:'15px',fontWeight:'bold'}}>{val.vote_count}</text>

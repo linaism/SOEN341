@@ -163,153 +163,148 @@ const ViewQuestionPage = () => {
     }
   };
 
-  const upVote= {
+  const upVote = {
     backgroundColor: "#04AA6D",
     color: "white",
-    fontFamily: 'Source Sans Pro,sans-serif',
+    fontFamily: "Source Sans Pro,sans-serif",
     borderRadius: "5px",
-    border:'0',
+    border: "0",
     Width: "60px",
-    marginLeft:'10px'
-};
-const downVote= {
+    marginLeft: "10px",
+  };
+  const downVote = {
     backgroundColor: "#E55B13",
     color: "white",
-    fontFamily: 'Source Sans Pro,sans-serif',
+    fontFamily: "Source Sans Pro,sans-serif",
     borderRadius: "5px",
-    border:'0',
+    border: "0",
     Width: "60px",
-    marginLeft:'10px'
-};
-const BlueButton = {
+    marginLeft: "10px",
+  };
+  const BlueButton = {
     backgroundColor: "#00868B",
     color: "white",
-    fontFamily: 'Source Sans Pro,sans-serif',
+    fontFamily: "Source Sans Pro,sans-serif",
     borderRadius: "5px",
-    border:'0',
+    border: "0",
     Width: "60px",
-    marginLeft:'10px'
-};
+    marginLeft: "10px",
+  };
 
-const titleText = {
-    fontFamily:'Teko',
-    fontSize:'30px', 
-    paddingTop:'40px', 
-    color:'#008B8B', 
-    paddingLeft:'40px'
-};
+  const titleText = {
+    fontSize: 40,
+    textAlign: "left",
+    paddingTop: "50px",
+    fontFamily: "Teko",
+    margin: "20px",
+  };
 
-const blueContainer = {
-    backgroundColor:'#CCDCFD',
-    borderRadius:'5px'
-};
+  const questionTitleStyle = {
+    borderBottom: "solid 1px #c9cad1",
+    fontSize: "24px",
+    fontFamily: "Roboto",
+    paddingBottom: "3px",
+    margin: "15px 15px 5px 15px",
+  };
 
-const paddingAttribute = {
-    paddingTop: '10px',
-    paddingRight: '20px',
-    paddingBottom: '30px',
-    paddingLeft: '40px',   
-};
+  const contentStyle = {
+    fontSize: "16px",
+    fontFamily: "Roboto",
+    margin: 15,
+  };
 
-const marginAttribute = {
+  const containerStyle = {
+    position: "center",
+    margin: "5px 20px 20px 20px",
+  };
 
-    marginTop: '10px',
-    marginRight: '20px',
-    marginBottom: '30px',
-    marginLeft: '40px',   
-};
+  const questionBox = {
+    backgroundColor: "#f7f8fd",
+    borderRadius: "11px",
+    padding: "15px",
+    marginBottom: "20px",
+  };
 
-const lightBlueContainer = {
-    backgroundColor:'#E6E6FA',
-    borderRadius:'5px',
-    width:'50%'
-};
+  const bestAnswerBox = {
+    border: "solid 3px #6680cc",
+    borderRadius: "11px",
+    padding: "15px",
+    marginBottom: "20px",
+  };
+
+  const answerTitle = {
+    fontSize: "20px",
+    fontWeight: "bold",
+    fontFamily: "Roboto",
+    margin: "15px 15px 5px 15px",
+  };
+
+  const answerBox = {
+    border: "solid 2px #c6cfec",
+    borderRadius: "11px",
+    padding: "15px",
+    marginBottom: "20px",
+  };
+
+  const submitButtonStyle = {
+    fontSize: 18,
+    color: "white",
+    padding: "10px",
+    backgroundColor: "#798fd2",
+    borderRadius: 5,
+    borderColor: "#798fd2",
+    width: "150px",
+    margin: "10px 0px 10px 0px",
+  };
 
   return (
     <div data-testid="viewQuestionPage">
-      <h1 style={titleText}> View Question </h1>
-      <div style={Object.assign({}, marginAttribute, blueContainer)}>
-        <h3
-          style={{
-            fontSize: "15px",
-            fontFamily: "sans-serif",
-            paddingTop: "10px",
-            paddingLeft: "60px",
-          }}
-        >
-          {" "}
-          Title: {state.question.title}{" "}
-        </h3>
-        <h3
-          style={{
-            fontSize: "15px",
-            fontFamily: "sans-serif",
-            paddingTop: "10px",
-            paddingLeft: "60px",
-          }}
-        >
-          {" "}
-          Content: {state.question.content}{" "}
-        </h3>
-        <p
-          style={{
-            fontSize: "15px",
-            fontFamily: "sans-serif",
-            paddingTop: "5px",
-            paddingLeft: "60px",
-          }}
-        >
-          Submitted by: {questionUsername}
-        </p>
-      </div>
-
-      <div className="App">
-        {bestSubmitted && (
-          <div className="answer">
-            <div
+      <h1 style={titleText}> Question </h1>
+      <div style={containerStyle}>
+        <div style={questionBox}>
+          <h3 style={questionTitleStyle}> {state.question.title} </h3>
+          <p style={contentStyle}> {state.question.content} </p>
+          <p style={contentStyle}>
+            Submitted by{" "}
+            <p
               style={{
-                fontSize: "10px",
-                fontFamily: "sans-serif",
-                paddingTop: "40px",
-                paddingLeft: "40px",
+                color: "#3956ac",
+                display: "inline",
+                fontWeight: "bold",
               }}
             >
-              <h1 style={titleText}>
-                Best Answer
-              </h1>
-              <h3 style={{ fontSize: "15px", paddingLeft: "20px" }}>
-                {" "}
-                Answer: {bestAnswer}
-              </h3>
+              {" "}
+              {questionUsername}{" "}
+            </p>
+          </p>
+        </div>
+
+        <h1
+          style={{
+            fontSize: 40,
+            textAlign: "left",
+            fontFamily: "Teko",
+            margin: "20px 20px 10px 0px",
+          }}
+        >
+          Answers
+        </h1>
+
+        <div className="App">
+          {bestSubmitted && (
+            <div className="answer" style={bestAnswerBox}>
+              <h1 style={answerTitle}>Best Answer</h1>
+              <p style={contentStyle}>{bestAnswer}</p>
             </div>
-          </div>
-        )}
-        <div className="answers">
-          <h1
-            style={{
-              fontFamily: "Teko",
-              fontSize: "30px",
-              paddingTop: "40px",
-              paddingLeft: "40px",
-            }}
-          >
-            Answers
-          </h1>
-          {answerList.map((val, key) => {
-            return (
-              val.question_id === state.question.question_id && (
-                <div className="answer" key={val.answer_id}>
-                  <div
-                    style={{
-                      fontSize: "10px",
-                      fontFamily: "sans-serif",
-                      paddingTop: "10px",
-                      paddingLeft: "60px",
-                    }}
-                  >
-                    <h3 style={{ fontSize: "15px" }}>Answer: {val.answer}</h3>
-                    <button 
-                      style= {BlueButton}
+          )}
+          <div className="answers">
+            {answerList.map((val, key) => {
+              return (
+                val.question_id === state.question.question_id && (
+                  <div className="answer" key={val.answer_id} style={answerBox}>
+                    <p style={contentStyle}> {val.answer}</p>
+                    <button
+                      style={BlueButton}
                       onClick={() => {
                         best(val.answer_id, val.answer);
                       }}
@@ -334,58 +329,48 @@ const lightBlueContainer = {
                     </button>
                     <text style={{ marginLeft: "10px" }}>{val.vote_count}</text>
                   </div>
-                </div>
-              )
-            );
-          })}
-        </div>
-        <div className="information">
-          <div>
-            <label
+                )
+              );
+            })}
+          </div>
+          <div className="information">
+            <div>
+              <label
+                style={{
+                  fontSize: 40,
+                  textAlign: "left",
+                  fontFamily: "Teko",
+                  margin: "20px 20px 10px 0px",
+                }}
+              >
+                Add Answer
+              </label>
+            </div>
+            <div style={{ margin: "0px 50px 25px 50px" }}>
+              <input
+                type="text"
+                style={{
+                  padding: "10px 0px 50px 10px",
+                  width: "100%",
+                  border: "solid 1px #c6cfec",
+                }}
+                placeholder="Enter answer..."
+                onChange={(event) => {
+                  setAnswer(event.target.value);
+                }}
+              />
+            </div>
+            <div
               style={{
-                fontSize: "15px",
-                fontFamily: "sans-serif",
-                paddingTop: "30px",
-                paddingLeft: "60px",
-                fontWeight: "bold",
+                alignSelf: "left",
+                textAlign: "right",
+                bottom: "0px",
               }}
             >
-              Answer:
-            </label>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignSelf: "center",
-              textAlign: "center",
-              paddingLeft: "80px",
-              paddingBottom: "20px",
-              paddingTop: "15px",
-            }}
-          >
-            <input
-              type="text"
-              style={{
-                paddingLeft: "10px",
-                paddingBottom: "50px",
-                paddingRight: "200px",
-              }}
-              placeholder="Enter answer..."
-              onChange={(event) => {
-                setAnswer(event.target.value);
-              }}
-            />
-          </div>
-          <div
-            style={{
-              display: "flex",
-              alignSelf: "center",
-              textAlign: "center",
-              paddingLeft: "60px",
-              paddingBottom: "60px",
-            }}
-          >
-            <button onClick={onClickHandler}>Add Answer</button>
+              <button style={submitButtonStyle} onClick={onClickHandler}>
+                Add Answer
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -164,31 +164,31 @@ const ViewQuestionPage = () => {
   };
 
   const upVote = {
-    backgroundColor: "#04AA6D",
+    backgroundColor: "#8cd992",
     color: "white",
-    fontFamily: "Source Sans Pro,sans-serif",
     borderRadius: "5px",
     border: "0",
-    Width: "60px",
     marginLeft: "10px",
+    padding: '5px', 
+    fontSize: '12px'
   };
   const downVote = {
-    backgroundColor: "#E55B13",
+    backgroundColor: "#d98c94",
     color: "white",
-    fontFamily: "Source Sans Pro,sans-serif",
     borderRadius: "5px",
     border: "0",
-    Width: "60px",
     marginLeft: "10px",
+    padding: '5px', 
+    fontSize: '12px'
   };
-  const BlueButton = {
-    backgroundColor: "#00868B",
+  const blueButton = {
+    backgroundColor: "#8c9fd9",
     color: "white",
-    fontFamily: "Source Sans Pro,sans-serif",
     borderRadius: "5px",
     border: "0",
-    Width: "60px",
     marginLeft: "10px",
+    padding: '5px', 
+    fontSize: '12px'
   };
 
   const titleText = {
@@ -226,7 +226,8 @@ const ViewQuestionPage = () => {
   };
 
   const bestAnswerBox = {
-    border: "solid 3px #6680cc",
+    backgroundColor: "#f7f8fd",
+    border: "solid 1px #c6cfec",
     borderRadius: "11px",
     padding: "15px",
     marginBottom: "20px",
@@ -249,16 +250,16 @@ const ViewQuestionPage = () => {
   const submitButtonStyle = {
     fontSize: 18,
     color: "white",
-    padding: "10px",
+    padding: "7px",
     backgroundColor: "#798fd2",
     borderRadius: 5,
     borderColor: "#798fd2",
-    width: "150px",
+    width: "130px",
     margin: "10px 0px 10px 0px",
   };
 
   return (
-    <div data-testid="viewQuestionPage">
+    <div className="container" data-testid="viewQuestionPage">
       <h1 style={titleText}> Question </h1>
       <div style={containerStyle}>
         <div style={questionBox}>
@@ -304,7 +305,7 @@ const ViewQuestionPage = () => {
                   <div className="answer" key={val.answer_id} style={answerBox}>
                     <p style={contentStyle}> {val.answer}</p>
                     <button
-                      style={BlueButton}
+                      style={blueButton}
                       onClick={() => {
                         best(val.answer_id, val.answer);
                       }}
@@ -340,13 +341,13 @@ const ViewQuestionPage = () => {
                   fontSize: 40,
                   textAlign: "left",
                   fontFamily: "Teko",
-                  margin: "20px 20px 10px 0px",
+                  margin: "20px 20px 0px 5px",
                 }}
               >
                 Add Answer
               </label>
             </div>
-            <div style={{ margin: "0px 50px 25px 50px" }}>
+            <div>
               <input
                 type="text"
                 style={{
@@ -362,7 +363,6 @@ const ViewQuestionPage = () => {
             </div>
             <div
               style={{
-                alignSelf: "left",
                 textAlign: "right",
                 bottom: "0px",
               }}

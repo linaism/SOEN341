@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import Axios from "axios";
 
@@ -13,34 +13,29 @@ const ViewQuestionPage = () => {
   const [bestAnswer, setBest] = useState("");
   const [bestSubmitted, setBestSubmitted] = useState(false);
   const [loginStatus, setLoginStatus] = useState(false);
+  const [tags, setTags] = useState([]);
 
   Axios.defaults.withCredentials = true;
 
-  useEffect(() => {
-    fetch();
-    answerList.map((val) => {
-      if (val.answer_id === state.question.best_answer_id) {
-        setBest(val.answer);
-        setBestSubmitted(true);
-      }
-      return true;
-    });
-  });
-
-  const fetch = () => {
+  const fetch = useCallback(() => {
     const request1 = Axios.get("http://localhost:5001/ansGet");
     const request2 = Axios.get(
       `http://localhost:5001/user/${state.question.user_id}`
     );
     const request3 = Axios.get("http://localhost:5001/login");
-    Axios.all([request1, request2, request3])
+    const request4 = Axios.get(
+      `http://localhost:5001/tags/${state.question.question_id}`
+    );
+    Axios.all([request1, request2, request3, request4])
       .then(
         Axios.spread((...responses) => {
           const r1 = responses[0];
           const r2 = responses[1];
           const r3 = responses[2];
+          const r4 = responses[3];
           setAnswerList(r1.data);
           setQuestionUsername(r2.data[0].username);
+          setTags(r4.data);
           if (r3.data.loggedIn === true) {
             setLoginStatus(r3.data.loggedIn);
             setUserId(r3.data.user[0].id);
@@ -51,7 +46,18 @@ const ViewQuestionPage = () => {
       .catch((err) => {
         console.error(err);
       });
-  };
+  }, [state.question.user_id, state.question.question_id]);
+
+  useEffect(() => {
+    fetch();
+    answerList.map((val) => {
+      if (val.answer_id === state.question.best_answer_id) {
+        setBest(val.answer);
+        setBestSubmitted(true);
+      }
+      return true;
+    });
+  }, [fetch, answerList, state.question.best_answer_id]);
 
   const onClickHandler = () => {
     if (loginStatus) {
@@ -169,8 +175,8 @@ const ViewQuestionPage = () => {
     borderRadius: "5px",
     border: "0",
     marginLeft: "10px",
-    padding: '5px', 
-    fontSize: '12px'
+    padding: "5px",
+    fontSize: "12px",
   };
   const downVote = {
     backgroundColor: "#d98c94",
@@ -178,8 +184,8 @@ const ViewQuestionPage = () => {
     borderRadius: "5px",
     border: "0",
     marginLeft: "10px",
-    padding: '5px', 
-    fontSize: '12px'
+    padding: "5px",
+    fontSize: "12px",
   };
   const blueButton = {
     backgroundColor: "#8c9fd9",
@@ -187,8 +193,8 @@ const ViewQuestionPage = () => {
     borderRadius: "5px",
     border: "0",
     marginLeft: "10px",
-    padding: '5px', 
-    fontSize: '12px'
+    padding: "5px",
+    fontSize: "12px",
   };
 
   const titleText = {
@@ -258,6 +264,17 @@ const ViewQuestionPage = () => {
     margin: "10px 0px 10px 0px",
   };
 
+  const tagsStyle = {
+    display: "inline",
+    fontSize: "14px",
+    marginRight: "10px",
+    borderRadius: "5px",
+    padding: "7px",
+    backgroundColor: "#9fafdf",
+    fontWeight: "bold",
+    color: "white",
+  };
+
   return (
     <div className="container" data-testid="viewQuestionPage">
       <h1 style={titleText}> Question </h1>
@@ -265,7 +282,16 @@ const ViewQuestionPage = () => {
         <div style={questionBox}>
           <h3 style={questionTitleStyle}> {state.question.title} </h3>
           <p style={contentStyle}> {state.question.content} </p>
-          <p style={contentStyle}>
+          <div style={{ margin: 15 }}>
+            {tags.map((val, key) => {
+              return (
+                <div key={val.tag_id} style={{ display: "inline" }}>
+                  <p style={tagsStyle}> {val.tag} </p>
+                </div>
+              );
+            })}
+          </div>
+          <div style={contentStyle}>
             Submitted by{" "}
             <p
               style={{
@@ -277,9 +303,8 @@ const ViewQuestionPage = () => {
               {" "}
               {questionUsername}{" "}
             </p>
-          </p>
+          </div>
         </div>
-
         <h1
           style={{
             fontSize: 40,
@@ -328,7 +353,9 @@ const ViewQuestionPage = () => {
                     >
                       Downvote
                     </button>
-                    <text style={{ marginLeft: "10px" }}>{val.vote_count}</text>
+                    <p style={{ marginLeft: "10px", display: "inline" }}>
+                      {val.vote_count}
+                    </p>
                   </div>
                 )
               );

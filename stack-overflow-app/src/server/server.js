@@ -114,10 +114,12 @@ app.post('/register', (req, res) => {
         "INSERT INTO logininfo (username, password) VALUES (?,?)", 
         [username, hash], 
         (err, result) => {
-          if (err.code === "ER_DUP_ENTRY") {
-            res.send({ message: "Username already exists"});
+          if (err) {
+            if (err.code === "ER_DUP_ENTRY") {
+              res.send({ message: "Username already exists"});
+            }
+            console.log(err);
           }
-          console.log(err);
         }
       );
     })

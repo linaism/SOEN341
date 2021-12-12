@@ -12,6 +12,14 @@ const NavigationBar = () => {
     });
   };
 
+  const buttonStyle = {
+    color: "white",
+    padding: "7px",
+    backgroundColor: "#8C98AF",
+    borderRadius: 5,
+    borderColor: "#8C98AF",
+  };
+
   return (
     <div className="navigationBar">
       <Navbar bg="light" sticky="top">
@@ -41,7 +49,7 @@ const NavigationBar = () => {
                 </NavDropdown.Item>
               </NavDropdown>
               <Nav.Link href="http://localhost:3000/ask-question">
-                <button>Ask Question</button>
+                <button style={buttonStyle}>Ask Question</button>
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>

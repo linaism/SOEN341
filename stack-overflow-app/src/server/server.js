@@ -208,6 +208,21 @@ app.post('/tags', (req, res) => {
   );
 });
 
+app.get('/tags/:id', (req, res) => {
+  const question_id = req.params.id;
+
+  questionsDB.query("SELECT * FROM tags_info WHERE question_id = ?", 
+    question_id,
+    (err, result) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(result);
+      }
+    }
+  );
+});
+
 // Adds a question
 app.post('/ans', (req, res) => {
     const answer = req.body.answer;
@@ -327,48 +342,9 @@ app.get("/user/:id", (req, res) => {
       }
     }
   );
-
 });
 
-// app.get("/search", (req, res) => {
-//   const searchStr = req.query.searchStr;
-//   var keywordStr = "";
-//   var tag = "";
-//   var isAccepted = false;
-
-//   var searchArr = searchStr.split(",").map(function(item) {
-//     return item;
-//   });
-
-//   for(let word of searchArr)
-//   {
-//     if(word.includes("[") && word.includes("]"))
-//     {
-//       word.replace('[', '');
-//       word.replace(']', '');
-//       tag = word;
-//       console.log(word);
-//     }else if(word.toLowerCase() == "\"isaccepted\"")
-//     {
-//       isAccepted = true;
-//     }else
-//       keyword = word;
-//   }
-
-//   if(keywordStr != "" && tag != "" && isAccepted)
-//   {
-//     console.log("query begins");
-//     questionsDB.query("SELECT questions_info.* FROM questions_info, tags_info WHERE questions_info.title=%?% AND questions_info.question_id = tags_info.question_id AND tags_info.tag=? AND questions_info.best_answer_id IS NOT NULL", 
-//     [keyword, tag], (err, result) => {
-//       if (err) {
-//         console.log(err);
-//       } else {
-//         res.send(result);
-//       }
-//     });
-//   }
-// });
-
+// Getting questions based on search input
 app.get("/search", (req, res) => {
   const searchStr = req.query.searchStr;
   var keywordStr = "";
@@ -462,17 +438,6 @@ app.get("/search", (req, res) => {
       }
     });
   }
-});
-
-
-app.get("/search-is-accepted", (req, res) => {
-  questionsDB.query("SELECT * FROM questions_info WHERE best_answer_id IS NOT NULL", (err, result) => {
-    if (err) {
-      console.log(err);
-    } else {
-      res.send(result);
-    }
-  });
 });
 
 app.listen(5001, () => {

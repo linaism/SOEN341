@@ -99,44 +99,42 @@ const QuestionsPage = () => {
       {searchTriggered &&
         searchResults.map((question) => {
           return (
-            <div key={question.question_id}>
-              <div>
-                <p
-                  style={{
-                    fontSize: "15px",
-                    paddingLeft: "60px",
-                  }}
-                >
-                  {question.title}
-                </p>
-                <p style={{ textOverflow: "ellipsis" }}>{question.content}</p>
-                <Link
-                  style={{ textDecoration: "none" }}
-                  to={{
-                    pathname: `/view-question/${question.question_id}`,
-                    state: { question: question },
-                  }}
-                >
-                  <div
-                    style={{
-                      alignSelf: "right",
-                      textAlign: "right",
-                      bottom: "0px",
+            <div key={question.question_id} style={questionBlockStyle}>
+              <p
+                style={{
+                  fontSize: "20px",
+                  borderBottom: "solid 1px #c9cad1",
+                }}
+              >
+                {question.title}
+              </p>
+              <p
+                style={{
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {question.content}
+              </p>
+              <div
+                style={{
+                  alignSelf: "right",
+                  textAlign: "right",
+                  bottom: "0px",
+                }}
+              >
+                <Button style={viewButtonStyle}>
+                  <Link
+                    style={{ textDecoration: "none", color: "#5663A6" }}
+                    to={{
+                      pathname: `/view-question/${question.question_id}`,
+                      state: { question: question },
                     }}
                   >
-                    <Button>
-                      <h3
-                        style={{
-                          fontSize: "15px",
-                          fontFamily: "sans-serif",
-                          paddingTop: "5px",
-                        }}
-                      >
-                        View Question
-                      </h3>
-                    </Button>
-                  </div>
-                </Link>
+                    View Question
+                  </Link>
+                </Button>
               </div>
             </div>
           );

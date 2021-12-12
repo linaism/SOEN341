@@ -23,7 +23,9 @@ const ViewQuestionPage = () => {
       `http://localhost:5001/user/${state.question.user_id}`
     );
     const request3 = Axios.get("http://localhost:5001/login");
-    const request4 = Axios.get(`http://localhost:5001/tags/${state.question.question_id}`);
+    const request4 = Axios.get(
+      `http://localhost:5001/tags/${state.question.question_id}`
+    );
     Axios.all([request1, request2, request3, request4])
       .then(
         Axios.spread((...responses) => {
@@ -56,7 +58,6 @@ const ViewQuestionPage = () => {
       return true;
     });
   }, [fetch, answerList, state.question.best_answer_id]);
-
 
   const onClickHandler = () => {
     if (loginStatus) {
@@ -174,8 +175,8 @@ const ViewQuestionPage = () => {
     borderRadius: "5px",
     border: "0",
     marginLeft: "10px",
-    padding: '5px', 
-    fontSize: '12px'
+    padding: "5px",
+    fontSize: "12px",
   };
   const downVote = {
     backgroundColor: "#d98c94",
@@ -183,8 +184,8 @@ const ViewQuestionPage = () => {
     borderRadius: "5px",
     border: "0",
     marginLeft: "10px",
-    padding: '5px', 
-    fontSize: '12px'
+    padding: "5px",
+    fontSize: "12px",
   };
   const blueButton = {
     backgroundColor: "#8c9fd9",
@@ -192,8 +193,8 @@ const ViewQuestionPage = () => {
     borderRadius: "5px",
     border: "0",
     marginLeft: "10px",
-    padding: '5px', 
-    fontSize: '12px'
+    padding: "5px",
+    fontSize: "12px",
   };
 
   const titleText = {
@@ -264,14 +265,14 @@ const ViewQuestionPage = () => {
   };
 
   const tagsStyle = {
-    display: 'inline', 
-    fontSize: '14px',  
-    marginRight: '10px', 
-    borderRadius: '5px', 
-    padding: '7px', 
-    backgroundColor: '#9fafdf',
-    fontWeight: 'bold', 
-    color: 'white'
+    display: "inline",
+    fontSize: "14px",
+    marginRight: "10px",
+    borderRadius: "5px",
+    padding: "7px",
+    backgroundColor: "#9fafdf",
+    fontWeight: "bold",
+    color: "white",
   };
 
   return (
@@ -281,13 +282,13 @@ const ViewQuestionPage = () => {
         <div style={questionBox}>
           <h3 style={questionTitleStyle}> {state.question.title} </h3>
           <p style={contentStyle}> {state.question.content} </p>
-          <div style={{margin: 15}}>
+          <div style={{ margin: 15 }}>
             {tags.map((val, key) => {
               return (
-                <div key={val.tag_id} style={{display: 'inline'}}> 
+                <div key={val.tag_id} style={{ display: "inline" }}>
                   <p style={tagsStyle}> {val.tag} </p>
                 </div>
-              )
+              );
             })}
           </div>
           <div style={contentStyle}>
@@ -304,19 +305,16 @@ const ViewQuestionPage = () => {
             </p>
           </div>
         </div>
-
-        {!answerList.length && (
-          <h1
-            style={{
-              fontSize: 40,
-              textAlign: "left",
-              fontFamily: "Teko",
-              margin: "20px 20px 10px 0px",
-            }}
-          >
-            Answers
-          </h1>
-        )}
+        <h1
+          style={{
+            fontSize: 40,
+            textAlign: "left",
+            fontFamily: "Teko",
+            margin: "20px 20px 10px 0px",
+          }}
+        >
+          Answers
+        </h1>
 
         <div className="App">
           {bestSubmitted && (
@@ -355,7 +353,9 @@ const ViewQuestionPage = () => {
                     >
                       Downvote
                     </button>
-                    <p style={{ marginLeft: "10px", display: 'inline' }}>{val.vote_count}</p>
+                    <p style={{ marginLeft: "10px", display: "inline" }}>
+                      {val.vote_count}
+                    </p>
                   </div>
                 )
               );

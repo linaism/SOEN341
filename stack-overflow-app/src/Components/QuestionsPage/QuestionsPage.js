@@ -35,19 +35,19 @@ const QuestionsPage = () => {
   };
 
   const searchStyle = {
-    padding: '7px', 
-    width: '85%', 
-    display: 'inline',
-    marginRight: 7, 
-    borderColor: '#EBEEF3'
+    padding: "7px",
+    width: "85%",
+    display: "inline",
+    marginRight: 7,
+    borderColor: "#EBEEF3",
   };
 
   const viewButtonStyle = {
-    borderRadius: '5px',
+    borderRadius: "5px",
     color: "#5663A6",
     padding: "7px",
     backgroundColor: "#EBEEF3",
-    borderColor: "#EBEEF3"
+    borderColor: "#EBEEF3",
   };
 
   const questionBlockStyle = {
@@ -60,7 +60,9 @@ const QuestionsPage = () => {
 
   return (
     <div className="container">
-      <div style={{ padding: "50px", paddingBottom: "0px", textAlign: 'center' }}>
+      <div
+        style={{ padding: "50px", paddingBottom: "0px", textAlign: "center" }}
+      >
         <input
           style={searchStyle}
           type="text"
@@ -69,11 +71,17 @@ const QuestionsPage = () => {
             setSearchValue(event.target.value);
           }}
         ></input>
-        <button style={{display: 'inline', borderRadius: '5px',
-    color: "#5663A6",
-    padding: "7px",
-    backgroundColor: "#EBEEF3",
-    borderColor: "#EBEEF3"}} onClick={search}>
+        <button
+          style={{
+            display: "inline",
+            borderRadius: "5px",
+            color: "#5663A6",
+            padding: "7px",
+            backgroundColor: "#EBEEF3",
+            borderColor: "#EBEEF3",
+          }}
+          onClick={search}
+        >
           Enter
         </button>
       </div>
@@ -101,9 +109,7 @@ const QuestionsPage = () => {
                 >
                   {question.title}
                 </p>
-                <p style={{textOverflow: 'ellipsis'}}>
-                  {question.content}
-                </p> 
+                <p style={{ textOverflow: "ellipsis" }}>{question.content}</p>
                 <Link
                   style={{ textDecoration: "none" }}
                   to={{
@@ -139,35 +145,42 @@ const QuestionsPage = () => {
         questionList.map((question) => {
           return (
             <div key={question.question_id} style={questionBlockStyle}>
-                <p
-                  style={{
-                    fontSize: '20px',
-                    borderBottom: 'solid 1px #c9cad1'
-                  }}
-                >
-                  {question.title}
-                </p>
-                <p style={{textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap'}}>
-                  {question.content}
-                </p> 
-                <div                     
+              <p
+                style={{
+                  fontSize: "20px",
+                  borderBottom: "solid 1px #c9cad1",
+                }}
+              >
+                {question.title}
+              </p>
+              <p
+                style={{
+                  textOverflow: "ellipsis",
+                  overflow: "hidden",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {question.content}
+              </p>
+              <div
                 style={{
                   alignSelf: "right",
                   textAlign: "right",
                   bottom: "0px",
-                }}>
-                  <Button style={viewButtonStyle}>
-                    <Link
-                      style={{ textDecoration: "none", color: "#5663A6", }}
-                      to={{
-                        pathname: `/view-question/${question.question_id}`,
-                        state: { question: question },
-                      }}
-                    >
-                      View Question
-                    </Link>
-                  </Button>
-                </div>
+                }}
+              >
+                <Button style={viewButtonStyle}>
+                  <Link
+                    style={{ textDecoration: "none", color: "#5663A6" }}
+                    to={{
+                      pathname: `/view-question/${question.question_id}`,
+                      state: { question: question },
+                    }}
+                  >
+                    View Question
+                  </Link>
+                </Button>
+              </div>
             </div>
           );
         })}
